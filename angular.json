@@ -2,35 +2,36 @@
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
   "cli": {
-    "packageManager": "npm"
+    "packageManager": "npm",
+    "analytics": "182f1d9e-2262-4dd4-847e-535bdd2bd15f"
   },
   "newProjectRoot": "projects",
   "projects": {
-    "brasa-burger": {
+    "storefront": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
           "style": "scss"
         }
       },
-      "root": "",
-      "sourceRoot": "src",
+      "root": "projects/storefront",
+      "sourceRoot": "projects/storefront/src",
       "prefix": "app",
       "architect": {
         "build": {
           "builder": "@angular/build:application",
           "options": {
-            "browser": "src/main.ts",
-            "tsConfig": "tsconfig.app.json",
+            "browser": "projects/storefront/src/main.ts",
+            "tsConfig": "projects/storefront/tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
               {
                 "glob": "**/*",
-                "input": "public"
+                "input": "projects/storefront/public"
               }
             ],
             "styles": [
-              "src/styles.scss"
+              "projects/storefront/src/styles.scss"
             ]
           },
           "configurations": {
@@ -61,16 +62,19 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "brasa-burger:build:production"
+              "buildTarget": "storefront:build:production"
             },
             "development": {
-              "buildTarget": "brasa-burger:build:development"
+              "buildTarget": "storefront:build:development"
             }
           },
           "defaultConfiguration": "development"
         },
         "test": {
-          "builder": "@angular/build:unit-test"
+          "builder": "@angular/build:unit-test",
+          "options": {
+            "tsConfig": "projects/storefront/tsconfig.spec.json"
+          }
         }
       }
     }

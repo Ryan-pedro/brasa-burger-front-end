@@ -1,6 +1,7 @@
-# Brasa Burger — Sistema de Pedidos (Angular)
+# Brasa Burger — Front-end (workspace Angular)
 
-Front-end do sistema de pedidos para restaurante/fast food, convertido a partir do protótipo.
+Workspace Angular do projeto. Hoje contém uma aplicação, o **Storefront** (`projects/storefront`), convertida a partir do protótipo.
+As demais aplicações (admin, kitchen, platform) e as bibliotecas compartilhadas entram em `projects/`, conforme [a arquitetura do frontend](../docs/architecture/frontend-architecture.md).
 Cobre o fluxo completo do cliente:
 
 **Home → Cardápio → Produto/Personalização → Bebidas → Carrinho → Tipo de pedido → Revisão → Confirmação → Acompanhamento → Comanda da cozinha**
@@ -17,7 +18,7 @@ Cobre o fluxo completo do cliente:
 ```bash
 npm install          # o .npmrc já usa legacy-peer-deps
 npm start            # http://localhost:4200
-npm run build        # build de produção em dist/brasa-burger/browser
+npm run build        # build de produção em dist/storefront/browser
 npm test             # testes (Vitest) das regras de preço
 ```
 
@@ -25,13 +26,13 @@ npm test             # testes (Vitest) das regras de preço
 
 - Angular 21, componentes standalone, **signals** e change detection zoneless
 - Novo controle de fluxo (`@if`, `@for`, `@switch`) e rotas com lazy loading
-- SCSS com tokens de design em variáveis CSS (`src/styles.scss`)
+- SCSS com tokens de design em variáveis CSS (`projects/storefront/src/styles.scss`)
 - Sem bibliotecas de UI: todos os componentes são próprios
 
 ## Estrutura
 
 ```
-src/
+projects/storefront/src/
 ├─ styles.scss                     # tokens (cores, fontes, raios), botões, chips, campos, animações
 ├─ index.html                      # fontes Google (Lilita One, Nunito, JetBrains Mono)
 └─ app/
@@ -71,8 +72,9 @@ src/
       ├─ order-confirmed/
       ├─ order-tracking/           # status em 5 etapas (simulado)
       └─ kitchen/                  # comanda saindo da impressora + window.print()
-public/img/produtos/               # ilustrações SVG dos produtos
 ```
+
+`projects/storefront/public/img/produtos/` guarda as ilustrações SVG dos produtos.
 
 ## Rotas
 
@@ -114,6 +116,6 @@ Os modelos em `core/models` podem servir de base para os DTOs.
 
 ## Personalização visual
 
-Cores, fontes e raios estão em `:root` no `src/styles.scss`. Para trocar as ilustrações por fotos,
-substitua os arquivos em `public/img/produtos/` (ou altere o campo `image` em `menu.data.ts`);
+Cores, fontes e raios estão em `:root` no `projects/storefront/src/styles.scss`. Para trocar as ilustrações por fotos,
+substitua os arquivos em `projects/storefront/public/img/produtos/` (ou altere o campo `image` em `menu.data.ts`);
 fotos com fundo transparente (PNG/WebP) ficam melhores sobre os fundos coloridos dos cards.
