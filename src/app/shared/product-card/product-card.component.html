@@ -1,0 +1,58 @@
+@let p = product();
+
+<article class="card-product">
+  <button type="button" class="media" [style.background]="tint()" (click)="open()"
+          [attr.aria-label]="'Ver detalhes de ' + p.name" [disabled]="p.unavailable">
+    <img [src]="p.image" [alt]="p.name" loading="lazy">
+
+    @if (p.popular && !p.unavailable && variant() === 'grid') {
+      <span class="badge-popular corner-left"><app-icon name="flame" [size]="11" [stroke]="2.6" />Popular</span>
+    }
+    @if (inCart() > 0) {
+      <span class="in-cart check-pop">{{ inCart() }} no pedido</span>
+    }
+    @if (p.unavailable && variant() === 'grid') {
+      <span class="unavailable-overlay"><span>Indisponível no momento</span></span>
+    }
+  </button>
+
+  <div class="body">
+    <div class="title-row">
+      <h3 class="name">{{ p.name }}</h3>
+      @if (p.popular && !p.unavailable && variant() === 'row') {
+        <span class="badge-popular">Popular</span>
+      }
+    </div>
+    @if (p.size) {
+      <span class="size">{{ p.size }}</span>
+    }
+    <p class="desc">{{ p.description }}</p>
+
+    <div class="footer">
+      <div class="prices">
+        @if (p.oldPrice) {
+          <span class="old">{{ p.oldPrice | brl }}</span>
+        }
+        <span class="price">{{ p.price | brl }}</span>
+      </div>
+
+      @if (p.unavailable) {
+        @if (variant() === 'row') {
+          <button type="button" class="unavailable-btn" disabled>Indisponível no momento</button>
+        } @else {
+          <button type="button" class="icon-btn" disabled [attr.aria-label]="p.name + ' indisponível'">
+            <app-icon name="plus" [stroke]="2.6" />
+          </button>
+        }
+      } @else if (variant() === 'row') {
+        <button type="button" class="btn btn-primary btn-sm add-row" (click)="add()">
+          <app-icon name="plus" [size]="18" [stroke]="2.6" />Adicionar
+        </button>
+      } @else {
+        <button type="button" class="icon-btn" (click)="add()" [attr.aria-label]="'Adicionar ' + p.name">
+          <app-icon name="plus" [stroke]="2.6" />
+        </button>
+      }
+    </div>
+  </div>
+</article>

@@ -1,0 +1,115 @@
+@if (product(); as p) {
+  <div class="overlay fade-in">
+    <button type="button" class="backdrop" (click)="close()" aria-label="Fechar"></button>
+
+    <section class="sheet" role="dialog" aria-modal="true" [attr.aria-label]="p.name">
+      <div class="scroll no-scrollbar">
+        <div class="media" [style.background]="tint()">
+          <span class="grabber"></span>
+          <img class="fade-in" [src]="p.image" [alt]="p.name">
+          <button type="button" class="close" (click)="close()" aria-label="Fechar">
+            <app-icon name="close" [size]="20" [stroke]="2.4" />
+          </button>
+        </div>
+
+        <div class="content">
+          <header class="head">
+            <div class="title-row">
+              <h2 class="title">{{ p.name }}</h2>
+              <div class="prices">
+                @if (p.oldPrice) { <span class="old">{{ p.oldPrice | brl }}</span> }
+                <span class="price">{{ p.price | brl }}</span>
+              </div>
+            </div>
+            @if (p.size) { <span class="size">{{ p.size }}</span> }
+            <p class="desc">{{ p.description }}</p>
+          </header>
+
+          <!-- Bebida do combo -->
+          @if (p.customization === 'combo') {
+            <section class="group">
+              <div class="group-head">
+                <h3>Bebida do combo</h3>
+                <span class="req">Obrigatório</span>
+              </div>
+              <div class="options" role="radiogroup" aria-label="Bebida do combo">
+                @for (c of comboDrinks; track c.id) {
+                  <button type="button" role="radio" class="option" [class.is-on]="draft().choice === c.id"
+                          [attr.aria-checked]="draft().choice === c.id" (click)="pickChoice(c.id)">
+                    <span class="radio">@if (draft().choice === c.id) { <span class="dot check-pop"></span> }</span>
+                    <span class="opt-label">{{ c.label }}</span>
+                    <span class="opt-price">{{ c.price ? '+ ' + (c.price | brl) : 'incluso' }}</span>
+                  </button>
+                }
+              </div>
+            </section>
+          }
+
+          <!-- Ingredientes (remover) -->
+          @if (p.ingredients?.length) {
+            <section class="group">
+              <div class="group-head column">
+                <h3>Ingredientes</h3>
+                <span class="hint">Toque para remover o que você não quer.</span>
+              </div>
+              <ul class="ingredients">
+                @for (g of p.ingredients; track g.id) {
+                  <li>
+                    <button type="button" class="ing" [disabled]="g.fixed" [attr.aria-pressed]="!isRemoved(g.id)"
+                            (click)="toggleIngredient(g.id)">
+                      <span class="box" [class.on]="!isRemoved(g.id)">
+                        @if (!isRemoved(g.id)) { <app-icon name="check" [size]="15" [stroke]="3.4" /> }
+                      </span>
+                      <span class="ing-label" [class.removed]="isRemoved(g.id)">{{ g.label }}</span>
+                      <span class="ing-tag">{{ g.fixed ? 'Incluso' : (isRemoved(g.id) ? 'Removido' : '') }}</span>
+                    </button>
+                  </li>
+                }
+              </ul>
+              @if (removedSummary()) {
+                <span class="removed-summary fade-in">Seu lanche: {{ removedSummary() }}</span>
+              }
+            </section>
+          }
+
+          <!-- Adicionais -->
+          @if (extras().length) {
+            <section class="group">
+              <div class="group-head">
+                <h3>Adicionais</h3>
+                <span class="opt">Opcional</span>
+              </div>
+              <div class="options">
+                @for (e of extras(); track e.id) {
+                  <button type="button" class="option" [class.is-on]="hasExtra(e.id)" [attr.aria-pressed]="hasExtra(e.id)"
+                          (click)="toggleExtra(e.id)">
+                    <span class="box" [class.on-red]="hasExtra(e.id)">
+                      @if (hasExtra(e.id)) { <app-icon class="check-pop" name="check" [size]="15" [stroke]="3.4" /> }
+                    </span>
+                    <span class="opt-label">{{ e.label }}</span>
+                    <span class="opt-price extra">+ {{ e.price | brl }}</span>
+                  </button>
+                }
+              </div>
+            </section>
+          }
+
+          <!-- Observação -->
+          <section class="group">
+            <label for="obs" class="group-label">Observação do pedido</label>
+            <textarea id="obs" class="field" rows="2" placeholder="Ex.: Cortar o lanche ao meio."
+                      [value]="draft().note" (input)="setNote($event)"></textarea>
+          </section>
+        </div>
+      </div>
+
+      <footer class="actions">
+        <app-qty-stepper [value]="draft().qty" [large]="true" (increase)="inc()" (decrease)="dec()" />
+        <button type="button" class="btn btn-primary confirm" (click)="confirm()">
+          <span>{{ isEditing() ? 'Salvar' : 'Adicionar' }}</span>
+          <span class="confirm-price">{{ total() | brl }}</span>
+        </button>
+      </footer>
+    </section>
+  </div>
+}

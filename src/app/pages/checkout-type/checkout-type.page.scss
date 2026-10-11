@@ -1,0 +1,73 @@
+:host { display: block; }
+
+.page { padding-top: 20px; padding-bottom: 40px; display: flex; flex-direction: column; gap: 18px; }
+.intro { font-size: 16px; }
+
+.options { display: flex; flex-direction: column; gap: 10px; }
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  border-radius: 20px;
+  border: 2px solid var(--line);
+  background: var(--white);
+  text-align: left;
+  transition: border-color .15s, background .15s;
+
+  &.is-on { border-color: var(--red); background: var(--selected-bg); }
+}
+
+.option-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  background: var(--red);
+  color: var(--yellow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.option-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex-grow: 1;
+
+  strong { font-size: 17px; font-weight: 900; }
+  small { font-size: 14px; color: var(--muted); }
+}
+
+.radio {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid var(--line-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  .is-on & { border-color: var(--red); }
+}
+
+.dot { width: 12px; height: 12px; border-radius: 50%; background: var(--red); }
+
+.form { padding: 20px; display: flex; flex-direction: column; gap: 14px; border-radius: 24px; }
+.field-group { display: flex; flex-direction: column; gap: 6px; }
+.delivery { display: flex; flex-direction: column; gap: 12px; }
+.two { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.error { font-size: 14px; font-weight: 700; color: var(--danger); }
+
+.total {
+  padding: 16px 20px;
+  border-radius: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+
+  .price { font-size: 22px; }
+}

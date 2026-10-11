@@ -1,0 +1,167 @@
+<!-- ===== Hero ===== -->
+<section class="hero">
+  <div class="hero-inner container">
+    <span class="hero-pill fade-in">Bem-vindo à {{ restaurant.name }}</span>
+    <h1 class="hero-title">Seu lanche favorito, <span>do seu jeito.</span></h1>
+
+    <div class="hero-visual">
+      <svg class="hero-deco" aria-hidden="true" viewBox="0 0 400 300">
+        <rect x="18" y="70" width="12" height="60" rx="3" fill="#FFB320" transform="rotate(-28 24 100)"/>
+        <rect x="36" y="58" width="11" height="54" rx="3" fill="#F6C343" transform="rotate(-8 41 85)"/>
+        <rect x="352" y="120" width="12" height="62" rx="3" fill="#FFB320" transform="rotate(32 358 150)"/>
+        <rect x="370" y="96" width="11" height="50" rx="3" fill="#F6C343" transform="rotate(12 375 120)"/>
+        <circle cx="350" cy="44" r="18" fill="#E4372E" stroke="#FFFFFF" stroke-width="3"/><circle cx="350" cy="44" r="10" fill="#FF7A6B"/>
+        <path d="M40 210q14-26 34-10q-6 22-34 10z" fill="#7CC242"/>
+        <ellipse cx="80" cy="40" rx="5" ry="2.6" fill="#FFF2D2" transform="rotate(30 80 40)"/>
+        <ellipse cx="320" cy="230" rx="5" ry="2.6" fill="#FFF2D2" transform="rotate(-20 320 230)"/>
+        <ellipse cx="300" cy="20" rx="5" ry="2.6" fill="#FFF2D2"/>
+        <ellipse cx="110" cy="250" rx="5" ry="2.6" fill="#FFF2D2" transform="rotate(50 110 250)"/>
+        <path d="M330 250l16-4 2 14z" fill="#FFC42E"/><path d="M60 150l14 4-10 10z" fill="#FFC42E"/>
+      </svg>
+      <img class="hero-img float" src="img/produtos/b_xbacon.svg" alt="X-Bacon no pão brioche">
+    </div>
+
+    <div class="hero-actions">
+      <a routerLink="/cardapio" class="btn btn-yellow btn-lg">Fazer pedido <app-icon name="arrow-right" [size]="20" [stroke]="2.6" /></a>
+      <a routerLink="/promocoes" class="btn btn-ghost-light btn-lg">Promoções</a>
+    </div>
+
+    <div class="hero-chips">
+      <span><span class="dot pulse"></span>Aberto até 23h</span>
+      <span>Pronto em 20–30 min</span>
+    </div>
+  </div>
+  <svg class="wave" aria-hidden="true" viewBox="0 0 400 60" preserveAspectRatio="none">
+    <path d="M0 34 C60 6 110 6 170 30 C230 54 290 58 340 34 C365 22 385 18 400 20 V60 H0 Z" fill="#FFF6E8"/>
+  </svg>
+</section>
+
+<!-- ===== Por que a Brasa ===== -->
+<section class="why container">
+  <span class="tag">Por que a Brasa</span>
+  <h2 class="section-title">Sabor de brasa,<br>feito na hora</h2>
+  <p class="lead">Hamburgueria de bairro desde 2016. Carne moída todo dia, pão assado na casa e grelha a carvão — cada lanche montado do jeito que você pedir.</p>
+  <ul class="features">
+    @for (f of features; track f.label) {
+      <li><span class="feature-icon"><app-icon [name]="f.icon" [size]="28" [stroke]="1.8" /></span>{{ f.label }}</li>
+    }
+  </ul>
+</section>
+
+<!-- ===== Categorias ===== -->
+<section class="categories">
+  <div class="tiles-scroll no-scrollbar">
+    <div class="tiles">
+      @for (c of categories; track c.id) {
+        <button type="button" class="tile" [class.highlight]="c.id === highlightCategory" (click)="goToCategory(c.id)">
+          @if (c.id === highlightCategory) { <span class="tile-top">Top</span> }
+          <img [src]="c.image" alt="">
+          <span class="tile-label">{{ c.label }}</span>
+        </button>
+      }
+      <a routerLink="/bebidas" class="tile last">
+        <img src="img/produtos/shake_choc.svg" alt="">
+        <span class="tile-label">Bebidas</span>
+      </a>
+    </div>
+  </div>
+  <div class="marquee-wrap" aria-hidden="true">
+    <div class="marquee">MAIS PEDIDOS • MAIS PEDIDOS • MAIS PEDIDOS • MAIS PEDIDOS • MAIS PEDIDOS • MAIS PEDIDOS •&nbsp;</div>
+  </div>
+</section>
+
+<!-- ===== Combo da semana ===== -->
+<section class="feature-combo container">
+  <div class="combo-visual">
+    <div class="combo-stage"><img class="float" src="img/produtos/combo_semana.svg" alt="Combo da Semana: X-Bacon, batata e refrigerante"></div>
+    <span class="combo-seal"><small>POR</small>32,90</span>
+  </div>
+  <div class="combo-text">
+    <span class="tag">Combo da Semana</span>
+    <h2 class="section-title">Um mundo de sabor <span class="ink">em cada mordida</span></h2>
+    <p class="lead">X-Bacon no pão brioche, batata frita média e bebida 350ml à sua escolha. De R$ 39,90 por R$ 32,90, só nesta semana.</p>
+    <ul class="bullets">
+      <li>X-Bacon brioche</li><li>Batata média</li><li>Bebida à escolha</li><li>Economia de R$ 7</li>
+    </ul>
+    <button type="button" class="btn btn-primary" (click)="openWeeklyCombo()">Quero esse combo</button>
+  </div>
+</section>
+
+<!-- ===== Mais pedidos ===== -->
+<section class="best">
+  <div class="best-band"></div>
+  <div class="container">
+    <div class="best-card card">
+      <div class="best-head">
+        <h2 class="best-title">Nossos <span>mais pedidos</span></h2>
+        <a routerLink="/cardapio" class="link-btn">VER TUDO</a>
+      </div>
+      <ul class="best-list">
+        @for (p of bestSellers; track p.id) {
+          <li>
+            <button type="button" class="best-thumb" [style.background]="menu.tint(p)" (click)="sheet.open(p)" [attr.aria-label]="'Ver ' + p.name">
+              <img [src]="p.image" alt="">
+            </button>
+            <div class="best-info">
+              <span class="best-name">{{ p.name }}</span>
+              <span class="best-desc">{{ p.description }}</span>
+            </div>
+            <span class="best-price price">{{ p.price | brl }}</span>
+            <button type="button" class="icon-btn small" (click)="sheet.quickAdd(p)" [attr.aria-label]="'Adicionar ' + p.name">
+              <app-icon name="plus" [size]="18" [stroke]="2.8" />
+            </button>
+          </li>
+        }
+      </ul>
+    </div>
+    <div class="best-deco" aria-hidden="true">
+      <img src="img/produtos/fritas_cheddar.svg" alt="">
+      <img src="img/produtos/shake_morango.svg" alt="">
+    </div>
+  </div>
+</section>
+
+<!-- ===== Ofertas ===== -->
+<section class="offers">
+  <div class="container">
+    <h2 class="offers-title">Ofertas quentes</h2>
+    <div class="offers-grid">
+      <a routerLink="/cardapio" [queryParams]="{ categoria: 'burgers' }" class="offer red">
+        <span class="offer-kicker">Terça do Hambúrguer</span>
+        <span class="offer-title">2º burger com 50% OFF</span>
+        <span class="offer-text">Toda terça-feira, no de menor valor.</span>
+        <img src="img/produtos/b_smash.svg" alt="">
+      </a>
+      <a routerLink="/cardapio" class="offer white">
+        <span class="offer-kicker">Pedido pelo app</span>
+        <span class="offer-title">R$ 5 OFF acima de R$ 30</span>
+        <span class="offer-text">Aplicado sozinho no carrinho.</span>
+        <img src="img/produtos/fritas.svg" alt="">
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Rodapé ===== -->
+<footer class="footer">
+  <div class="container footer-inner">
+    <div class="footer-brand"><app-logo-mark [size]="54" [inverted]="true" /><span>{{ restaurant.name.toUpperCase() }}</span></div>
+    <div class="footer-cols">
+      <div>
+        <h3>Horário</h3>
+        @for (h of restaurant.hours; track h.days) { <p>{{ h.days }} · {{ h.time }}</p> }
+      </div>
+      <div>
+        <h3>Endereço</h3>
+        <p>{{ restaurant.address }}</p>
+        <p>{{ restaurant.city }}</p>
+        <p>{{ restaurant.phone }}</p>
+      </div>
+    </div>
+    <div class="footer-links">
+      <a href="#"><app-icon name="at" [size]="18" />{{ restaurant.instagram }}</a>
+      <a href="#"><app-icon name="chat" [size]="18" />Fale conosco</a>
+      <a href="#"><app-icon name="pin" [size]="18" />Como chegar</a>
+    </div>
+  </div>
+</footer>

@@ -1,0 +1,77 @@
+<app-flow-header title="Tipo de pedido" backTo="/carrinho" [step]="1" />
+
+<form class="container-narrow page screen-in" (submit)="$event.preventDefault(); next()">
+  <p class="muted intro">Como você quer receber seu pedido?</p>
+
+  <div class="options" role="radiogroup" aria-label="Tipo de pedido">
+    @for (o of options; track o.id) {
+      <button type="button" role="radio" class="option" [class.is-on]="checkout.type() === o.id"
+              [attr.aria-checked]="checkout.type() === o.id" (click)="checkout.type.set(o.id)">
+        <span class="option-icon"><app-icon [name]="o.icon" [size]="26" /></span>
+        <span class="option-text"><strong>{{ o.title }}</strong><small>{{ o.desc }}</small></span>
+        <span class="radio">@if (checkout.type() === o.id) { <span class="dot check-pop"></span> }</span>
+      </button>
+    }
+  </div>
+
+  <section class="card form">
+    @switch (checkout.type()) {
+      @case ('local') {
+        <div class="field-group fade-in">
+          <label for="mesa" class="label">Número da mesa</label>
+          <input id="mesa" class="field" inputmode="numeric" placeholder="Ex.: 12" required
+                 [value]="checkout.form().mesa" (input)="set('mesa', $event)">
+          <span class="hint">O número está na plaquinha sobre a mesa.</span>
+        </div>
+      }
+      @case ('balcao') {
+        <div class="field-group fade-in">
+          <label for="nome" class="label">Nome do cliente</label>
+          <input id="nome" class="field" placeholder="Como devemos te chamar?" autocomplete="given-name" required
+                 [value]="checkout.form().nome" (input)="set('nome', $event)">
+          <span class="hint">Chamamos esse nome no balcão quando o pedido ficar pronto.</span>
+        </div>
+      }
+      @case ('delivery') {
+        <div class="delivery fade-in">
+          <div class="field-group">
+            <label for="dnome" class="label">Nome</label>
+            <input id="dnome" class="field" autocomplete="name" required [value]="checkout.form().deliveryNome" (input)="set('deliveryNome', $event)">
+          </div>
+          <div class="field-group">
+            <label for="tel" class="label">Telefone</label>
+            <input id="tel" class="field" type="tel" inputmode="tel" autocomplete="tel" required [value]="checkout.form().telefone" (input)="set('telefone', $event)">
+          </div>
+          <div class="field-group">
+            <label for="rua" class="label">Endereço</label>
+            <input id="rua" class="field" autocomplete="address-line1" required [value]="checkout.form().rua" (input)="set('rua', $event)">
+          </div>
+          <div class="two">
+            <div class="field-group">
+              <label for="num" class="label">Número</label>
+              <input id="num" class="field" inputmode="numeric" required [value]="checkout.form().numero" (input)="set('numero', $event)">
+            </div>
+            <div class="field-group">
+              <label for="comp" class="label">Complemento</label>
+              <input id="comp" class="field" autocomplete="address-line2" [value]="checkout.form().complemento" (input)="set('complemento', $event)">
+            </div>
+          </div>
+          <div class="field-group">
+            <label for="bairro" class="label">Bairro</label>
+            <input id="bairro" class="field" required [value]="checkout.form().bairro" (input)="set('bairro', $event)">
+          </div>
+        </div>
+      }
+    }
+    @if (!checkout.isValid()) {
+      <span class="error">Preencha os campos obrigatórios para continuar.</span>
+    }
+  </section>
+
+  <div class="card total">
+    <span class="muted">{{ cart.count() }} {{ cart.count() === 1 ? 'item' : 'itens' }} · total</span>
+    <span class="price">{{ checkout.totals().total | brl }}</span>
+  </div>
+
+  <button type="submit" class="btn btn-primary btn-lg btn-block" [disabled]="!checkout.isValid()">Continuar para revisão</button>
+</form>
