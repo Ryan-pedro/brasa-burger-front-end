@@ -4,6 +4,7 @@ import { RESTAURANT } from '../../core/data/menu.data';
 import { CategoryId } from '../../core/models/menu.model';
 import { MenuService } from '../../core/services/menu.service';
 import { ProductSheetService } from '../../core/services/product-sheet.service';
+import { StoreContext } from '../../core/store/store-context.service';
 import { BrlPipe } from '../../shared/brl.pipe';
 import { IconComponent, IconName } from '../../shared/icon.component';
 import { LogoMarkComponent } from '../../shared/logo.component';
@@ -19,6 +20,7 @@ export class HomePage {
   private readonly router = inject(Router);
   readonly menu = inject(MenuService);
   readonly sheet = inject(ProductSheetService);
+  readonly store = inject(StoreContext);
 
   readonly restaurant = RESTAURANT;
   readonly categories = this.menu.categories;

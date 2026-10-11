@@ -6,7 +6,17 @@ Cobre o fluxo completo do cliente:
 
 **Home → Cardápio → Produto/Personalização → Bebidas → Carrinho → Tipo de pedido → Revisão → Confirmação → Acompanhamento → Comanda da cozinha**
 
-> Os dados são **mockados** (sem backend). A estrutura já está separada para ligar uma API .NET depois — veja [Integração com a API](#integração-com-a-api).
+> O **nome da loja** já vem da API (`GET /api/v1/store/profile`); o cardápio e os pedidos ainda são **mockados** — veja [Integração com a API](#integração-com-a-api).
+
+## Lojas por endereço
+
+A loja é definida pelo endereço acessado. Com a API rodando (veja `back-end/README.md`):
+
+- http://brasa.localhost:4200 abre a Brasa Burger
+- http://smash-house.localhost:4200 abre a Smash House
+- http://localhost:4200 mostra "Loja não encontrada", porque esse endereço não pertence a nenhuma loja
+
+O servidor de desenvolvimento encaminha `/api` para `http://localhost:5143` (`proxy.conf.json`), preservando o endereço original.
 
 ## Requisitos
 
@@ -17,9 +27,9 @@ Cobre o fluxo completo do cliente:
 
 ```bash
 npm install          # o .npmrc já usa legacy-peer-deps
-npm start            # http://localhost:4200
+npm start            # http://brasa.localhost:4200 (a API precisa estar rodando)
 npm run build        # build de produção em dist/storefront/browser
-npm test             # testes (Vitest) das regras de preço
+npm test             # testes (Vitest)
 ```
 
 ## Stack

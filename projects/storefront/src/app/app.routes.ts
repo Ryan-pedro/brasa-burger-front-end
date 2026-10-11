@@ -2,11 +2,11 @@ import { Routes } from '@angular/router';
 import { hasItemsGuard, hasOrderGuard } from './core/guards';
 
 export const routes: Routes = [
-  { path: '', title: 'Brasa Burger', loadComponent: () => import('./pages/home/home.page').then(m => m.HomePage) },
-  { path: 'cardapio', title: 'Cardápio · Brasa Burger', loadComponent: () => import('./pages/menu/menu.page').then(m => m.MenuPage) },
-  { path: 'bebidas', title: 'Bebidas · Brasa Burger', loadComponent: () => import('./pages/drinks/drinks.page').then(m => m.DrinksPage) },
-  { path: 'promocoes', title: 'Promoções · Brasa Burger', loadComponent: () => import('./pages/promos/promos.page').then(m => m.PromosPage) },
-  { path: 'carrinho', title: 'Carrinho · Brasa Burger', loadComponent: () => import('./pages/cart/cart.page').then(m => m.CartPage) },
+  { path: '', loadComponent: () => import('./pages/home/home.page').then(m => m.HomePage) },
+  { path: 'cardapio', title: 'Cardápio', loadComponent: () => import('./pages/menu/menu.page').then(m => m.MenuPage) },
+  { path: 'bebidas', title: 'Bebidas', loadComponent: () => import('./pages/drinks/drinks.page').then(m => m.DrinksPage) },
+  { path: 'promocoes', title: 'Promoções', loadComponent: () => import('./pages/promos/promos.page').then(m => m.PromosPage) },
+  { path: 'carrinho', title: 'Carrinho', loadComponent: () => import('./pages/cart/cart.page').then(m => m.CartPage) },
 
   // Checkout
   { path: 'pedido/tipo', title: 'Tipo de pedido', canActivate: [hasItemsGuard],

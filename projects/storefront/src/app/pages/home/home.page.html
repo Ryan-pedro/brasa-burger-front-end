@@ -1,7 +1,7 @@
 <!-- ===== Hero ===== -->
 <section class="hero">
   <div class="hero-inner container">
-    <span class="hero-pill fade-in">Bem-vindo à {{ restaurant.name }}</span>
+    <span class="hero-pill fade-in">Bem-vindo à {{ store.name() }}</span>
     <h1 class="hero-title">Seu lanche favorito, <span>do seu jeito.</span></h1>
 
     <div class="hero-visual">
@@ -145,7 +145,7 @@
 <!-- ===== Rodapé ===== -->
 <footer class="footer">
   <div class="container footer-inner">
-    <div class="footer-brand"><app-logo-mark [size]="54" [inverted]="true" /><span>{{ restaurant.name.toUpperCase() }}</span></div>
+    <div class="footer-brand"><app-logo-mark [size]="54" [inverted]="true" /><span>{{ store.name().toUpperCase() }}</span></div>
     <div class="footer-cols">
       <div>
         <h3>Horário</h3>

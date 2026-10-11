@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { CartService } from '../../core/services/cart.service';
+import { StoreContext } from '../../core/store/store-context.service';
 import { LogoMarkComponent } from '../logo.component';
 
 /**
@@ -14,12 +15,9 @@ import { LogoMarkComponent } from '../logo.component';
   template: `
     <header class="header" [class.on-red]="onRed()">
       <div class="bar container-bar">
-        <a routerLink="/" class="brand" aria-label="Brasa Burger — início">
+        <a routerLink="/" class="brand" [attr.aria-label]="store.name() + ' — início'">
           <app-logo-mark [size]="40" />
-          <span class="brand-text">
-            <span class="brand-name">BRASA</span>
-            <span class="brand-sub">BURGER &amp; CO.</span>
-          </span>
+          <span class="brand-name">{{ store.name() }}</span>
         </a>
 
         <nav class="links" aria-label="Principal">
@@ -43,9 +41,8 @@ import { LogoMarkComponent } from '../logo.component';
     .bar { background: var(--white); border-radius: 999px; box-shadow: 0 8px 22px rgba(90, 10, 20, .14);
       display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 6px 6px 6px 10px; min-height: 56px; }
     .brand { display: flex; align-items: center; gap: 9px; text-decoration: none; }
-    .brand-text { display: flex; flex-direction: column; line-height: 1; }
-    .brand-name { font-family: var(--font-display); font-size: 21px; color: var(--red); letter-spacing: .02em; }
-    .brand-sub { font-size: 10px; font-weight: 900; letter-spacing: .2em; color: var(--ink); }
+    .brand-name { font-family: var(--font-display); font-size: 21px; line-height: 1; color: var(--red);
+      letter-spacing: .02em; text-transform: uppercase; }
     .btn { box-shadow: none; }
     .links, .cart-desktop { display: none; }
     .links a { color: var(--ink); text-decoration: none; font-weight: 900; font-size: 15px; letter-spacing: .04em;
@@ -63,6 +60,7 @@ import { LogoMarkComponent } from '../logo.component';
 })
 export class SiteHeaderComponent {
   readonly cart = inject(CartService);
+  readonly store = inject(StoreContext);
   /** Fundo vermelho na Home, para emendar com o hero. */
   readonly onRed = input(false);
 }
