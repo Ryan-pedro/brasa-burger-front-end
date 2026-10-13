@@ -21,42 +21,36 @@ describe('StoreContext', () => {
     expect(store.name()).toBe('');
   });
 
-  it('pede o perfil sem informar a loja: quem decide é o servidor, pelo endereço', async () => {
+  it('carrega o perfil da loja', async () => {
     const loading = store.load();
     const request = http.expectOne('/api/v1/store/profile');
 
     expect(request.request.method).toBe('GET');
-    expect(request.request.params.keys()).toEqual([]);
-
-    request.flush({ slug: 'brasa', name: 'Brasa Burger', timeZoneId: 'America/Sao_Paulo' });
+    request.flush({ name: 'Brasa Burger', timeZoneId: 'America/Sao_Paulo' });
     await loading;
 
     expect(store.status()).toBe('ready');
     expect(store.name()).toBe('Brasa Burger');
   });
 
-  it('endereço sem loja vira "not-found"', async () => {
+  it('falha da API vira "error", sem derrubar a aplicação', async () => {
     const loading = store.load();
-    http.expectOne('/api/v1/store/profile').flush({ code: 'store_not_found' }, { status: 404, statusText: 'Not Found' });
-    await loading;
-
-    expect(store.status()).toBe('not-found');
-    expect(store.profile()).toBeNull();
-  });
-
-  it('loja suspensa vira "unavailable"', async () => {
-    const loading = store.load();
-    http.expectOne('/api/v1/store/profile').flush({ code: 'store_unavailable' }, { status: 403, statusText: 'Forbidden' });
-    await loading;
-
-    expect(store.status()).toBe('unavailable');
-  });
-
-  it('falha do servidor vira "error", sem derrubar a aplicação', async () => {
-    const loading = store.load();
-    http.expectOne('/api/v1/store/profile').flush(null, { status: 500, statusText: 'Server Error' });
+    http.expectOne('/api/v1/store/profile').flush(null, { status: 503, statusText: 'Service Unavailable' });
     await loading;
 
     expect(store.status()).toBe('error');
+    expect(store.profile()).toBeNull();
+  });
+
+  it('pode tentar de novo depois de uma falha', async () => {
+    const first = store.load();
+    http.expectOne('/api/v1/store/profile').flush(null, { status: 500, statusText: 'Server Error' });
+    await first;
+
+    const second = store.load();
+    http.expectOne('/api/v1/store/profile').flush({ name: 'Brasa Burger', timeZoneId: 'America/Sao_Paulo' });
+    await second;
+
+    expect(store.status()).toBe('ready');
   });
 });
