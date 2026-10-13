@@ -7,7 +7,6 @@ interface StoreProfile {
   timeZoneId: string;
 }
 
-/** Nome da loja para o cabeçalho e o login. Não bloqueia a abertura do painel. */
 @Injectable({ providedIn: 'root' })
 export class StoreProfileService {
   private readonly http = inject(HttpClient);
@@ -19,7 +18,6 @@ export class StoreProfileService {
     try {
       this._profile.set(await firstValueFrom(this.http.get<StoreProfile>('/api/v1/store/profile')));
     } catch {
-      // Sem o nome, o painel mostra só "Painel da loja".
     }
   }
 }

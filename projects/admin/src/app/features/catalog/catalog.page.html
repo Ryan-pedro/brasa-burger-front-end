@@ -1,0 +1,114 @@
+<header class="head">
+  <h1>Cardápio</h1>
+  <button *admCan="write" type="button" class="btn btn-quiet" (click)="editCategory(null)">Nova categoria</button>
+</header>
+
+@switch (store.status()) {
+  @case ('loading') {
+    <p class="state" role="status">Carregando o cardápio…</p>
+  }
+  @case ('error') {
+    <div class="state" role="alert">
+      <p>Não foi possível carregar o cardápio.</p>
+      <button type="button" class="btn btn-primary" (click)="store.load()">Tentar de novo</button>
+    </div>
+  }
+  @default {
+    @if (store.notice(); as notice) {
+      <p class="notice" role="alert">{{ notice }}</p>
+    }
+
+    <div class="layout">
+      <nav class="categories" aria-label="Categorias">
+        @for (category of store.categories(); track category.id) {
+          <button
+            type="button"
+            class="category"
+            [class.current]="category.id === store.selected()?.id"
+            [attr.aria-current]="category.id === store.selected()?.id"
+            (click)="store.select(category.id)"
+          >
+            <span class="category-name">{{ category.name }}</span>
+            <span class="category-meta">
+              @if (!category.isActive) {
+                <span class="tag">oculta</span>
+              }
+              {{ store.productCounts().get(category.id) ?? 0 }}
+            </span>
+          </button>
+        } @empty {
+          <p class="empty">Nenhuma categoria ainda.</p>
+        }
+      </nav>
+
+      @if (store.selected(); as category) {
+        <section class="products" aria-labelledby="category-title">
+          <div class="products-head">
+            <h2 id="category-title">{{ category.name }}</h2>
+            <div class="actions" *admCan="write">
+              <button type="button" class="btn btn-quiet" (click)="editCategory(category)">Editar categoria</button>
+              <button type="button" class="btn btn-primary" (click)="editProduct(null, category.id)">Novo produto</button>
+            </div>
+          </div>
+
+          @if (!category.isActive) {
+            <p class="hint">Esta categoria está oculta: os clientes não a veem no cardápio.</p>
+          }
+
+          <ul class="list">
+            @for (product of store.products(); track product.id) {
+              <li class="product" [class.off]="!product.isAvailable">
+                <div class="product-main">
+                  <p class="product-name">
+                    {{ product.name }}
+                    @if (product.size) {
+                      <span class="size">{{ product.size }}</span>
+                    }
+                    @if (product.isFeatured) {
+                      <span class="tag">destaque</span>
+                    }
+                  </p>
+                  @if (product.description) {
+                    <p class="product-desc">{{ product.description }}</p>
+                  }
+                </div>
+
+                <p class="price">{{ product.priceInCents | brl }}</p>
+
+                <ng-template #readOnly>
+                  <span class="availability">{{ product.isAvailable ? 'Disponível' : 'Em falta' }}</span>
+                </ng-template>
+                <button
+                  *admCan="write; else readOnly"
+                  type="button"
+                  role="switch"
+                  class="switch"
+                  [attr.aria-checked]="product.isAvailable"
+                  [attr.aria-label]="'Disponível: ' + product.name"
+                  (click)="store.toggleAvailability(product)"
+                >
+                  <span class="switch-track" aria-hidden="true"></span>
+                  {{ product.isAvailable ? 'Disponível' : 'Em falta' }}
+                </button>
+
+                <button *admCan="write" type="button" class="edit" (click)="editProduct(product, category.id)">
+                  Editar<span class="visually-hidden"> {{ product.name }}</span>
+                </button>
+              </li>
+            } @empty {
+              <li class="empty">Nenhum produto nesta categoria.</li>
+            }
+          </ul>
+        </section>
+      }
+    </div>
+  }
+}
+
+@if (editing(); as edit) {
+  @if (edit.kind === 'category') {
+    <adm-category-form [category]="edit.category" (closed)="editing.set(null)" />
+  } @else {
+    <adm-product-form [product]="edit.product" [categoryId]="edit.categoryId" (closed)="editing.set(null)" />
+  }
+}

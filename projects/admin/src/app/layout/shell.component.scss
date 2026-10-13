@@ -17,7 +17,6 @@
 }
 .skip:focus { top: 10px; }
 
-/* ---------- Barra superior ---------- */
 .topbar {
   position: sticky;
   top: 0;
@@ -71,7 +70,6 @@
 }
 .signout:hover:not(:disabled) { background: rgba(255, 246, 232, .12); }
 
-/* ---------- Navegação e conteúdo ---------- */
 .body {
   display: grid;
   grid-template-columns: var(--sidebar-w) 1fr;
@@ -133,7 +131,6 @@
   .content { padding: 24px 20px 40px; }
 }
 
-/* No celular, a barra fica só com a loja e o botão Sair; o nome aparece na saudação. */
 @media (max-width: 599px) {
   .topbar { padding: 0 16px; }
   .store-tag,

@@ -1,0 +1,6 @@
+.form { display: grid; gap: 18px; }
+.row { display: grid; grid-template-columns: 1fr 1fr; align-items: start; gap: 12px; }
+textarea.input { resize: vertical; }
+.check { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 15px; }
+.check input { width: 18px; height: 18px; accent-color: var(--red); }
+.alert { padding: 12px 14px; border-radius: var(--radius-field); background: var(--danger-bg); color: var(--danger); font-weight: 700; }

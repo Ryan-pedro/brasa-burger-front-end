@@ -17,8 +17,6 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideHttpClient(withFetch(), withInterceptors([csrfInterceptor, sessionExpiredInterceptor])),
-    // Antes da primeira tela, pergunta à API se o cookie ainda vale; os guards dependem disso.
-    // O nome da loja carrega em paralelo, sem segurar a abertura.
     provideAppInitializer(() => {
       void inject(StoreProfileService).load();
       return inject(AdminSession).restore();

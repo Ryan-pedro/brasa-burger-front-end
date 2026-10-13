@@ -1,10 +1,12 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { AdminSession } from '../../core/session/admin-session.service';
-import { ADMIN_MODULES } from '../../layout/admin-modules';
+import { allowedModules } from '../../layout/allowed-modules';
 import { firstName, greetingFor } from './greeting';
 
 @Component({
   selector: 'adm-home-page',
+  imports: [RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <h1>{{ greeting }}, {{ name() }}.</h1>
@@ -12,11 +14,15 @@ import { firstName, greetingFor } from './greeting';
 
     <h2>O que você vai encontrar aqui</h2>
     <ul class="modules">
-      @for (module of modules(); track module.permission) {
+      @for (module of modules(); track module.path) {
         <li>
-          <span class="name">{{ module.label }}</span>
+          @if (module.loadComponent) {
+            <a class="name" [routerLink]="'/' + module.path">{{ module.label }}</a>
+          } @else {
+            <span class="name">{{ module.label }}</span>
+          }
           <span class="desc">{{ module.description }}</span>
-          @if (!module.path) {
+          @if (!module.loadComponent) {
             <span class="state">em breve</span>
           }
         </li>
@@ -38,7 +44,8 @@ import { firstName, greetingFor } from './greeting';
       padding: 14px 4px;
       border-bottom: 1px solid var(--line);
     }
-    .name { font-weight: 800; }
+    .name { font-weight: 800; color: var(--ink); }
+    a.name { color: var(--red-dark); }
     .desc { color: var(--ink-2); }
     .state { font-size: 13px; font-weight: 700; color: var(--muted); white-space: nowrap; }
     @media (max-width: 599px) {
@@ -52,5 +59,5 @@ export class HomePage {
 
   protected readonly greeting = greetingFor(new Date().getHours());
   protected readonly name = computed(() => firstName(this.session.user()?.name));
-  protected readonly modules = computed(() => ADMIN_MODULES.filter((m) => this.session.can(m.permission)));
+  protected readonly modules = allowedModules();
 }

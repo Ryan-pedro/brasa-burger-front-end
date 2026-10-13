@@ -6,7 +6,6 @@ import { AdminSession } from '../../core/session/admin-session.service';
 import { safeReturnUrl } from '../../core/session/return-url';
 import { StoreProfileService } from '../../core/store/store-profile.service';
 
-/** O que dizer para cada código de erro da API. */
 const LOGIN_ERRORS: Record<string, string> = {
   invalid_credentials: 'E-mail ou senha não conferem. Confira e tente de novo.',
   account_locked: 'Muitas tentativas erradas seguidas. Por segurança, o acesso fica bloqueado por 15 minutos.',
@@ -28,7 +27,6 @@ export class LoginPage {
   private readonly router = inject(Router);
   protected readonly store = inject(StoreProfileService);
 
-  /** Preenchidos pela URL: ?voltar=/pedidos&motivo=sessao */
   readonly voltar = input<string>();
   readonly motivo = input<string>();
 

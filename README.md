@@ -1,6 +1,6 @@
 # Brasa Burger — Front-end (workspace Angular)
 
-> Este repositório tem só o front-end. A API (.NET), o banco local, a infraestrutura e a documentação de arquitetura ficam no repositório [Ryan-pedro/brasa-burger](https://github.com/Ryan-pedro/brasa-burger) ([ADR-0017](https://github.com/Ryan-pedro/brasa-burger/blob/main/docs/adr/0017-front-end-em-repositorio-proprio.md)).
+> Este repositório tem só o front-end. A API (.NET), o banco local, a infraestrutura e a documentação de arquitetura ficam no repositório [Ryan-pedro/brasa-burger-API](https://github.com/Ryan-pedro/brasa-burger-API) ([ADR-0017](https://github.com/Ryan-pedro/brasa-burger-API/blob/main/docs/adr/0017-front-end-em-repositorio-proprio.md)).
 
 Workspace Angular do projeto, com duas aplicações:
 
@@ -9,7 +9,7 @@ Workspace Angular do projeto, com duas aplicações:
 | **Storefront**: loja do consumidor | `projects/storefront` | http://localhost:4200 |
 | **Admin**: painel da loja | `projects/admin` | http://localhost:4201 |
 
-O painel da cozinha e as bibliotecas compartilhadas entram em `projects/` depois, conforme [a arquitetura do frontend](https://github.com/Ryan-pedro/brasa-burger/blob/main/docs/architecture/frontend-architecture.md).
+O painel da cozinha e as bibliotecas compartilhadas entram em `projects/` depois, conforme [a arquitetura do frontend](https://github.com/Ryan-pedro/brasa-burger-API/blob/main/docs/architecture/frontend-architecture.md).
 
 O Storefront foi convertido a partir do protótipo e cobre o fluxo completo do cliente:
 
@@ -17,7 +17,7 @@ O Storefront foi convertido a partir do protótipo e cobre o fluxo completo do c
 
 > O **nome da loja** já vem da API (`GET /api/v1/store/profile`); o cardápio e os pedidos ainda são **mockados** — veja [Integração com a API](#integração-com-a-api).
 
-Os dois servidores de desenvolvimento encaminham `/api` para a API em `http://localhost:5143` (`proxy.conf.json`). Suba a API antes (veja o [README do back-end](https://github.com/Ryan-pedro/brasa-burger/blob/main/back-end/README.md)); sem ela, as duas aplicações mostram uma tela de erro com o botão "Tentar de novo".
+Os dois servidores de desenvolvimento encaminham `/api` para a API em `http://localhost:5143` (`proxy.conf.json`). Suba a API antes (veja o [README da API](https://github.com/Ryan-pedro/brasa-burger-API/blob/main/README.md)); sem ela, as duas aplicações mostram uma tela de erro com o botão "Tentar de novo".
 
 ## Requisitos
 
@@ -39,17 +39,17 @@ Para desenvolver com a API, deixe os dois repositórios lado a lado:
 
 ```
 Documents/
-├─ brasa-burger/            # API, banco (Docker Compose) e documentação
+├─ brasa-burger-API/        # API, banco (Docker Compose) e documentação
 └─ brasa-burger-front-end/  # este repositório
 ```
 
-Suba o banco e a API pelo `brasa-burger` e o front por aqui. Mudanças que alteram o contrato da API viram dois pull requests, um em cada repositório: faça o merge da API primeiro.
+Suba o banco e a API pelo `brasa-burger-API` e o front por aqui. Mudanças que alteram o contrato da API viram dois pull requests, um em cada repositório: faça o merge da API primeiro.
 
 A integração contínua (`.github/workflows/ci.yml`) roda os testes e o build das duas aplicações em todo push e pull request.
 
 ## Admin (painel da loja)
 
-Por enquanto: login, sessão, saída e a tela inicial com os módulos que o papel do usuário libera. Os módulos aparecem como "em breve" até serem construídos.
+Login, sessão, saída, a tela inicial e o módulo **Cardápio** (categorias, produtos, preço e disponibilidade). Os outros módulos aparecem como "em breve" até terem tela.
 
 Usuários de demonstração (criados pela API em Development), todos com a senha `brasa-dev-1234`:
 
@@ -74,13 +74,19 @@ projects/admin/src/app/
 │  ├─ session/      # AdminSession, guards, permissões, sessão expirada, retorno seguro
 │  └─ store/        # nome da loja, título da aba
 ├─ layout/          # barra superior, navegação lateral, lista de módulos
+├─ shared/          # *admCan, painel lateral (sheet), dinheiro em centavos, mensagens de campo
 └─ features/
    ├─ auth/         # login
    ├─ home/         # início
+   ├─ catalog/      # cardápio: API, store com signals, página e formulários
    └─ no-access/    # conta sem acesso ao painel (cozinha)
 ```
 
-Para criar um módulo: adicione a rota como filha de `''` em `app.routes.ts` com `canActivate: [permissionGuard(Permission.X)]` e preencha `path` no item correspondente de `layout/admin-modules.ts`.
+Permissões, nunca papéis: o painel só pergunta "tem a permissão X?".
+
+- `layout/admin-modules.ts` é a lista única de módulos. Dela saem as rotas (cada uma com `permissionGuard`), o menu lateral e a tela inicial. Para criar um módulo, acrescente um item com `loadComponent`.
+- Dentro das telas, `*admCan="'catalog.write'; else somenteLeitura"` mostra ou esconde ações conforme a permissão.
+- A API continua sendo quem decide: as permissões só montam a tela.
 
 ## Stack
 

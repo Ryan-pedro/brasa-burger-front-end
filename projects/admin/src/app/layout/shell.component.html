@@ -27,9 +27,9 @@
           Início
         </a>
       </li>
-      @for (module of modules(); track module.permission) {
+      @for (module of modules(); track module.path) {
         <li>
-          @if (module.path) {
+          @if (module.loadComponent) {
             <a [routerLink]="module.path" routerLinkActive="active" ariaCurrentWhenActive="page">{{ module.label }}</a>
           } @else {
             <span class="soon" aria-disabled="true">

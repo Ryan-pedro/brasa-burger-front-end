@@ -6,7 +6,6 @@
   grid-template-columns: minmax(320px, 5fr) 7fr;
 }
 
-/* ---------- Lado da marca: a "brasa" ---------- */
 .brand {
   position: relative;
   display: flex;
@@ -36,7 +35,6 @@
   text-wrap: balance;
 }
 
-/* ---------- Formulário ---------- */
 .panel {
   display: grid;
   align-items: center;
@@ -103,7 +101,6 @@ h1 {
 
 .help { font-size: 14px; color: var(--muted); }
 
-/* ---------- Telas estreitas: a marca vira uma faixa no topo ---------- */
 @media (max-width: 767px) {
   .login { grid-template-columns: 1fr; grid-template-rows: auto 1fr; }
 

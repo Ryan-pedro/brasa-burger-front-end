@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@a
 import { Router } from '@angular/router';
 import { AdminSession } from '../../core/session/admin-session.service';
 
-/** Para quem entrou com uma conta sem permissões de painel, como a da cozinha. */
 @Component({
   selector: 'adm-no-access-page',
   changeDetection: ChangeDetectionStrategy.OnPush,

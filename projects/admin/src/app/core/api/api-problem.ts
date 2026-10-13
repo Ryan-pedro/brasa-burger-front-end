@@ -1,15 +1,13 @@
 import { HttpErrorResponse } from '@angular/common/http';
+import { firstValueFrom, Observable } from 'rxjs';
 
-/** Código usado quando o servidor não respondeu (sem rede, API fora do ar). */
 export const NETWORK_ERROR = 'network_error';
-
-/** Código usado quando a resposta de erro não trouxe um "code" reconhecível. */
 export const UNEXPECTED_ERROR = 'unexpected_error';
 
-/**
- * Extrai o "code" estável de uma resposta Problem Details da API.
- * É por ele, e nunca pelo texto do título, que o painel decide o que mostrar.
- */
+export type FieldErrors = Readonly<Record<string, readonly string[]>>;
+
+export type ApiResult<T> = { ok: true; value: T } | { ok: false; code: string; fields: FieldErrors };
+
 export function problemCode(error: unknown): string {
   if (!(error instanceof HttpErrorResponse)) {
     return UNEXPECTED_ERROR;
@@ -19,10 +17,24 @@ export function problemCode(error: unknown): string {
     return NETWORK_ERROR;
   }
 
-  const body: unknown = error.error;
-  if (body && typeof body === 'object' && 'code' in body && typeof body.code === 'string') {
-    return body.code;
-  }
+  const body = problemBody(error);
+  return typeof body?.['code'] === 'string' ? body['code'] : UNEXPECTED_ERROR;
+}
 
-  return UNEXPECTED_ERROR;
+export function problemFields(error: unknown): FieldErrors {
+  const errors = error instanceof HttpErrorResponse ? problemBody(error)?.['errors'] : undefined;
+  return errors && typeof errors === 'object' ? (errors as FieldErrors) : {};
+}
+
+export async function toResult<T>(request: Observable<T>): Promise<ApiResult<T>> {
+  try {
+    return { ok: true, value: await firstValueFrom(request) };
+  } catch (error) {
+    return { ok: false, code: problemCode(error), fields: problemFields(error) };
+  }
+}
+
+function problemBody(error: HttpErrorResponse): Record<string, unknown> | null {
+  const body: unknown = error.error;
+  return body && typeof body === 'object' ? (body as Record<string, unknown>) : null;
 }

@@ -36,7 +36,6 @@ export class App {
   protected readonly session = inject(AdminSession);
 
   protected retry(): void {
-    // Recarregar refaz a verificação e deixa os guards decidirem a tela certa.
     window.location.reload();
   }
 }

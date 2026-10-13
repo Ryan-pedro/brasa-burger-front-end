@@ -1,0 +1,67 @@
+<adm-sheet [heading]="product() ? 'Editar produto' : 'Novo produto'" (closed)="closed.emit()">
+  <form class="form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+    @if (failure(); as message) {
+      <p class="alert" role="alert">{{ message }}</p>
+    }
+
+    <div class="field">
+      <label for="product-name">Nome</label>
+      <input id="product-name" class="input" formControlName="name" [attr.aria-invalid]="!!error('name')" />
+      @if (error('name'); as message) {
+        <p class="field-error">{{ message }}</p>
+      }
+    </div>
+
+    <div class="field">
+      <label for="product-description">Descrição</label>
+      <textarea id="product-description" class="input" rows="3" formControlName="description"></textarea>
+      @if (error('description'); as message) {
+        <p class="field-error">{{ message }}</p>
+      }
+    </div>
+
+    <div class="row">
+      <div class="field">
+        <label for="product-price">Preço (R$)</label>
+        <input id="product-price" class="input" inputmode="decimal" placeholder="24,90" formControlName="price" [attr.aria-invalid]="!!error('price')" />
+        @if (error('price'); as message) {
+          <p class="field-error">{{ message }}</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="product-size">Tamanho</label>
+        <input id="product-size" class="input" placeholder="350ml" formControlName="size" />
+        @if (error('size'); as message) {
+          <p class="field-error">{{ message }}</p>
+        }
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="product-category">Categoria</label>
+      <select id="product-category" class="input" formControlName="categoryId">
+        @for (category of store.categories(); track category.id) {
+          <option [value]="category.id">{{ category.name }}</option>
+        }
+      </select>
+      @if (error('categoryId'); as message) {
+        <p class="field-error">{{ message }}</p>
+      }
+    </div>
+
+    <label class="check">
+      <input type="checkbox" formControlName="isAvailable" />
+      Disponível para pedir
+    </label>
+
+    <label class="check">
+      <input type="checkbox" formControlName="isFeatured" />
+      Destacar em "Mais pedidos"
+    </label>
+
+    <button type="submit" class="btn btn-primary" [disabled]="saving()">
+      {{ saving() ? 'Salvando…' : 'Salvar produto' }}
+    </button>
+  </form>
+</adm-sheet>

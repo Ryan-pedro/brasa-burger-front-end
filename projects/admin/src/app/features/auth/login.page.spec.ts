@@ -25,7 +25,6 @@ describe('LoginPage', () => {
       input.value = value;
       input.dispatchEvent(new Event('input'));
     };
-    /** Deixa a promessa do login terminar e a tela se atualizar. */
     const settle = async () => {
       await new Promise((resolve) => setTimeout(resolve));
       await fixture.whenStable();

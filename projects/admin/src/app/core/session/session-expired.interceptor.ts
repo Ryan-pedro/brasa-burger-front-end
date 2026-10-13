@@ -5,13 +5,8 @@ import { catchError, throwError } from 'rxjs';
 import { AdminSession } from './admin-session.service';
 import { safeReturnUrl } from './return-url';
 
-/** Rotas que tratam o 401 por conta própria. */
 const HANDLED_HERE = ['/api/v1/admin/auth/', '/api/v1/admin/session'];
 
-/**
- * Se a API responder 401 no meio do uso (cookie vencido, usuário desativado),
- * o painel esquece a sessão e leva para o login, avisando o motivo.
- */
 export const sessionExpiredInterceptor: HttpInterceptorFn = (request, next) => {
   const session = inject(AdminSession);
   const router = inject(Router);
