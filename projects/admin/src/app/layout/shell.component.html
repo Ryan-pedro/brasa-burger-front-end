@@ -1,0 +1,48 @@
+<a class="skip" href="#conteudo">Pular para o conteúdo</a>
+
+<header class="topbar">
+  <a class="store" routerLink="/">
+    <span class="store-name">{{ store.name() || 'Painel da loja' }}</span>
+    @if (store.name()) {
+      <span class="store-tag">Painel</span>
+    }
+  </a>
+
+  <div class="account">
+    <p class="who">
+      <span class="who-name">{{ session.user()?.name }}</span>
+      <span class="who-role">{{ session.roleLabel() }}</span>
+    </p>
+    <button type="button" class="signout" (click)="signOut()" [disabled]="signingOut()">
+      {{ signingOut() ? 'Saindo…' : 'Sair' }}
+    </button>
+  </div>
+</header>
+
+<div class="body">
+  <nav class="sidebar" aria-label="Módulos do painel">
+    <ul>
+      <li>
+        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" ariaCurrentWhenActive="page">
+          Início
+        </a>
+      </li>
+      @for (module of modules(); track module.permission) {
+        <li>
+          @if (module.path) {
+            <a [routerLink]="module.path" routerLinkActive="active" ariaCurrentWhenActive="page">{{ module.label }}</a>
+          } @else {
+            <span class="soon" aria-disabled="true">
+              {{ module.label }}
+              <small>em breve</small>
+            </span>
+          }
+        </li>
+      }
+    </ul>
+  </nav>
+
+  <main id="conteudo" class="content" tabindex="-1">
+    <router-outlet />
+  </main>
+</div>

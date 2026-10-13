@@ -1,0 +1,80 @@
+<div class="login">
+  <section class="brand" aria-label="Loja">
+    @if (store.name(); as name) {
+      <p class="brand-kicker">Painel da loja</p>
+      <p class="brand-name">{{ name }}</p>
+    } @else {
+      <p class="brand-name">Painel da loja</p>
+    }
+  </section>
+
+  <main class="panel">
+    <form class="form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+      <h1>Entrar no painel</h1>
+      <p class="lead">Use o e-mail e a senha que o dono da loja cadastrou para você.</p>
+
+      @if (sessionEnded()) {
+        <p class="notice" role="status">Sua sessão terminou. Entre de novo para continuar de onde parou.</p>
+      }
+
+      @if (errorMessage(); as message) {
+        <p class="alert" role="alert">{{ message }}</p>
+      }
+
+      <div class="field">
+        <label for="email">E-mail</label>
+        <input
+          id="email"
+          class="input"
+          type="email"
+          inputmode="email"
+          autocomplete="username"
+          autocapitalize="none"
+          spellcheck="false"
+          formControlName="email"
+          [attr.aria-invalid]="fieldInvalid('email')"
+          [attr.aria-describedby]="fieldInvalid('email') ? 'email-error' : null"
+        />
+        @if (fieldInvalid('email')) {
+          <p id="email-error" class="field-error">
+            {{ form.controls.email.hasError('required') ? 'Informe seu e-mail.' : 'Esse e-mail não parece completo.' }}
+          </p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="password">Senha</label>
+        <div class="password">
+          <input
+            #passwordInput
+            id="password"
+            class="input"
+            [type]="showPassword() ? 'text' : 'password'"
+            autocomplete="current-password"
+            formControlName="password"
+            [attr.aria-invalid]="fieldInvalid('password')"
+            [attr.aria-describedby]="fieldInvalid('password') ? 'password-error' : null"
+          />
+          <button
+            type="button"
+            class="reveal"
+            [attr.aria-pressed]="showPassword()"
+            aria-controls="password"
+            (click)="showPassword.set(!showPassword())"
+          >
+            {{ showPassword() ? 'Ocultar' : 'Mostrar' }}
+          </button>
+        </div>
+        @if (fieldInvalid('password')) {
+          <p id="password-error" class="field-error">Informe sua senha.</p>
+        }
+      </div>
+
+      <button type="submit" class="btn btn-primary submit" [disabled]="submitting()">
+        {{ submitting() ? 'Entrando…' : 'Entrar' }}
+      </button>
+
+      <p class="help">Esqueceu a senha? Peça ao dono da loja para criar uma nova.</p>
+    </form>
+  </main>
+</div>

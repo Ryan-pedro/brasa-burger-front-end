@@ -1,14 +1,23 @@
 # Brasa Burger — Front-end (workspace Angular)
 
-Workspace Angular do projeto. Hoje contém uma aplicação, o **Storefront** (`projects/storefront`), convertida a partir do protótipo.
-As demais aplicações (admin, kitchen, platform) e as bibliotecas compartilhadas entram em `projects/`, conforme [a arquitetura do frontend](../docs/architecture/frontend-architecture.md).
-Cobre o fluxo completo do cliente:
+> Este repositório tem só o front-end. A API (.NET), o banco local, a infraestrutura e a documentação de arquitetura ficam no repositório [Ryan-pedro/brasa-burger](https://github.com/Ryan-pedro/brasa-burger) ([ADR-0017](https://github.com/Ryan-pedro/brasa-burger/blob/main/docs/adr/0017-front-end-em-repositorio-proprio.md)).
+
+Workspace Angular do projeto, com duas aplicações:
+
+| Aplicação | Pasta | Endereço em desenvolvimento |
+|---|---|---|
+| **Storefront**: loja do consumidor | `projects/storefront` | http://localhost:4200 |
+| **Admin**: painel da loja | `projects/admin` | http://localhost:4201 |
+
+O painel da cozinha e as bibliotecas compartilhadas entram em `projects/` depois, conforme [a arquitetura do frontend](https://github.com/Ryan-pedro/brasa-burger/blob/main/docs/architecture/frontend-architecture.md).
+
+O Storefront foi convertido a partir do protótipo e cobre o fluxo completo do cliente:
 
 **Home → Cardápio → Produto/Personalização → Bebidas → Carrinho → Tipo de pedido → Revisão → Confirmação → Acompanhamento → Comanda da cozinha**
 
 > O **nome da loja** já vem da API (`GET /api/v1/store/profile`); o cardápio e os pedidos ainda são **mockados** — veja [Integração com a API](#integração-com-a-api).
 
-O servidor de desenvolvimento encaminha `/api` para a API em `http://localhost:5143` (`proxy.conf.json`). Suba a API antes (veja `back-end/README.md`); sem ela, o Storefront mostra a tela de erro com o botão "Tentar de novo".
+Os dois servidores de desenvolvimento encaminham `/api` para a API em `http://localhost:5143` (`proxy.conf.json`). Suba a API antes (veja o [README do back-end](https://github.com/Ryan-pedro/brasa-burger/blob/main/back-end/README.md)); sem ela, as duas aplicações mostram uma tela de erro com o botão "Tentar de novo".
 
 ## Requisitos
 
@@ -19,19 +28,68 @@ O servidor de desenvolvimento encaminha `/api` para a API em `http://localhost:5
 
 ```bash
 npm install          # o .npmrc já usa legacy-peer-deps
-npm start            # http://localhost:4200 (a API precisa estar rodando)
-npm run build        # build de produção em dist/storefront/browser
-npm test             # testes (Vitest)
+npm start            # Storefront em http://localhost:4200 (a API precisa estar rodando)
+npm run start:admin  # Admin em http://localhost:4201
+npm test             # testes das duas aplicações (Vitest), uma vez
+npm run test:admin   # testes de uma aplicação, em modo observação
+npm run build        # build de produção em dist/storefront e dist/admin
 ```
+
+Para desenvolver com a API, deixe os dois repositórios lado a lado:
+
+```
+Documents/
+├─ brasa-burger/            # API, banco (Docker Compose) e documentação
+└─ brasa-burger-front-end/  # este repositório
+```
+
+Suba o banco e a API pelo `brasa-burger` e o front por aqui. Mudanças que alteram o contrato da API viram dois pull requests, um em cada repositório: faça o merge da API primeiro.
+
+A integração contínua (`.github/workflows/ci.yml`) roda os testes e o build das duas aplicações em todo push e pull request.
+
+## Admin (painel da loja)
+
+Por enquanto: login, sessão, saída e a tela inicial com os módulos que o papel do usuário libera. Os módulos aparecem como "em breve" até serem construídos.
+
+Usuários de demonstração (criados pela API em Development), todos com a senha `brasa-dev-1234`:
+
+| E-mail | Papel | O que vê |
+|---|---|---|
+| `dono@brasa.dev` | Dono | Todos os módulos, inclusive Equipe |
+| `gerente@brasa.dev` | Gerente | Todos, menos Equipe |
+| `cozinha@brasa.dev` | Cozinha | Aviso de que a conta é da cozinha |
+
+Como a sessão funciona no navegador:
+
+- A sessão fica num cookie **HttpOnly** criado pela API. O JavaScript nunca lê o token; o painel só pergunta à API quem está conectado (`GET /api/v1/admin/session`).
+- Toda chamada que altera estado leva o cabeçalho `X-Brasa-Csrf` (`core/api/csrf.interceptor.ts`). Sem ele, a API recusa com `csrf_validation_failed`.
+- Um 401 no meio do uso (usuário desativado, cookie vencido) leva ao login com o aviso "Sua sessão terminou" e guarda a página em que o usuário estava (`?voltar=`). Só caminhos internos são aceitos em `voltar`.
+- As permissões só montam a tela (guards e navegação). Quem decide de verdade é a API.
+- As mensagens de erro vêm do campo `code` da resposta (`invalid_credentials`, `account_locked`, `account_disabled`), nunca do texto.
+
+```
+projects/admin/src/app/
+├─ core/
+│  ├─ api/          # código de erro da API, cabeçalho anti-CSRF
+│  ├─ session/      # AdminSession, guards, permissões, sessão expirada, retorno seguro
+│  └─ store/        # nome da loja, título da aba
+├─ layout/          # barra superior, navegação lateral, lista de módulos
+└─ features/
+   ├─ auth/         # login
+   ├─ home/         # início
+   └─ no-access/    # conta sem acesso ao painel (cozinha)
+```
+
+Para criar um módulo: adicione a rota como filha de `''` em `app.routes.ts` com `canActivate: [permissionGuard(Permission.X)]` e preencha `path` no item correspondente de `layout/admin-modules.ts`.
 
 ## Stack
 
 - Angular 21, componentes standalone, **signals** e change detection zoneless
 - Novo controle de fluxo (`@if`, `@for`, `@switch`) e rotas com lazy loading
-- SCSS com tokens de design em variáveis CSS (`projects/storefront/src/styles.scss`)
+- SCSS com tokens de design em variáveis CSS (`src/styles.scss` de cada aplicação)
 - Sem bibliotecas de UI: todos os componentes são próprios
 
-## Estrutura
+## Estrutura do Storefront
 
 ```
 projects/storefront/src/
@@ -78,7 +136,7 @@ projects/storefront/src/
 
 `projects/storefront/public/img/produtos/` guarda as ilustrações SVG dos produtos.
 
-## Rotas
+## Rotas do Storefront
 
 | Rota | Tela |
 |---|---|

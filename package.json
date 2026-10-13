@@ -4,9 +4,14 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve storefront",
-    "build": "ng build storefront",
+    "start:admin": "ng serve admin",
+    "build": "ng build storefront && ng build admin",
+    "build:storefront": "ng build storefront",
+    "build:admin": "ng build admin",
     "watch": "ng build storefront --watch --configuration development",
-    "test": "ng test storefront"
+    "test": "ng test storefront --watch=false && ng test admin --watch=false",
+    "test:storefront": "ng test storefront",
+    "test:admin": "ng test admin"
   },
   "private": true,
   "packageManager": "npm@10.9.7",

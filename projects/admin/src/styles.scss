@@ -1,0 +1,122 @@
+/* ==========================================================================
+   Brasa Burger — Painel da loja
+   Mesma marca do Storefront (vermelho, amarelo, Lilita One e Nunito), em tom
+   de "fundo de loja": superfícies claras e sóbrias, cor forte só onde importa.
+   ========================================================================== */
+
+:root {
+  /* Marca */
+  --ember: #7A0A1C;        /* vermelho profundo: painel da marca, barra superior */
+  --ember-2: #5C0715;
+  --red: #C8102E;          /* ação principal */
+  --red-dark: #9E0B22;
+  --yellow: #FFB320;       /* destaque sobre fundo escuro */
+
+  /* Neutros */
+  --ink: #2A1712;
+  --ink-2: #5E4A3F;
+  --muted: #7A675B;
+  --paper: #FFFCF8;
+  --surface: #FFFFFF;
+  --line: #EADBC8;
+  --line-strong: #D9C3A9;
+  --hover: #FBF1E4;
+
+  /* Estados */
+  --danger: #A32314;
+  --danger-bg: #FDECE8;
+  --focus: #9E0B22;
+
+  /* Tipografia */
+  --font-display: 'Lilita One', 'Arial Black', sans-serif;
+  --font-body: 'Nunito', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  /* Forma */
+  --radius-field: 10px;
+  --radius-panel: 16px;
+  --topbar-h: 60px;
+  --sidebar-w: 232px;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--ink);
+  background: var(--paper);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, p { margin: 0; }
+
+button, input, select, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; }
+button:disabled { cursor: not-allowed; }
+
+:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0);
+  white-space: nowrap; border: 0;
+}
+
+/* ---------- Botões ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 18px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-field);
+  font-weight: 800;
+  font-size: 15px;
+  text-decoration: none;
+  transition: background-color .15s ease, border-color .15s ease;
+}
+
+.btn-primary { background: var(--red); color: #fff; }
+.btn-primary:hover:not(:disabled) { background: var(--red-dark); }
+.btn-primary:disabled { opacity: .7; }
+
+.btn-quiet { background: transparent; color: var(--ink); border-color: var(--line-strong); }
+.btn-quiet:hover:not(:disabled) { background: var(--hover); }
+
+/* ---------- Campos ---------- */
+.field { display: grid; gap: 6px; }
+
+.field label { font-weight: 700; font-size: 14px; color: var(--ink); }
+
+.field-hint { font-size: 13px; color: var(--muted); }
+
+.field-error { font-size: 13px; font-weight: 700; color: var(--danger); }
+
+.input {
+  width: 100%;
+  min-height: 46px;
+  padding: 10px 14px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-field);
+  background: var(--surface);
+  font-size: 16px;
+}
+
+.input:hover { border-color: var(--muted); }
+.input:focus-visible { outline: 3px solid var(--focus); outline-offset: 0; border-color: var(--focus); }
+.input[aria-invalid='true'] { border-color: var(--danger); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; animation: none !important; }
+}
