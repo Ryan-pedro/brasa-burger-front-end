@@ -72,6 +72,10 @@ export class CartService {
     this.toast.show('Item removido');
   }
 
+  retain(keep: (productId: string) => boolean): void {
+    this.lines.update(lines => lines.filter(l => keep(l.productId)));
+  }
+
   clear(): void {
     this.lines.set([]);
   }

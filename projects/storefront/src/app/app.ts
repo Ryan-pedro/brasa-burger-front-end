@@ -7,7 +7,7 @@ import { CartBarComponent } from './shared/layout/cart-bar.component';
 import { SiteHeaderComponent } from './shared/layout/site-header.component';
 import { ToastComponent } from './shared/layout/toast.component';
 import { ProductSheetComponent } from './shared/product-sheet/product-sheet.component';
-import { StoreContext } from './core/store/store-context.service';
+import { StorefrontLoader } from './core/store/storefront-loader.service';
 import { StoreUnavailableComponent } from './core/store/store-unavailable.component';
 
 /** Rotas que usam o cabeçalho principal, a navegação inferior e a barra do carrinho. */
@@ -18,7 +18,7 @@ const TAB_ROUTES = ['/', '/cardapio', '/bebidas', '/promocoes', '/carrinho'];
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [RouterOutlet, SiteHeaderComponent, BottomNavComponent, CartBarComponent, ToastComponent, ProductSheetComponent, StoreUnavailableComponent],
   template: `
-    @if (store.status() === 'ready') {
+    @if (loader.status() === 'ready') {
       @if (isTab()) {
         <app-site-header [onRed]="isHome()" />
       }
@@ -42,7 +42,7 @@ const TAB_ROUTES = ['/', '/cardapio', '/bebidas', '/promocoes', '/carrinho'];
 })
 export class App {
   private readonly router = inject(Router);
-  readonly store = inject(StoreContext);
+  readonly loader = inject(StorefrontLoader);
 
   private readonly url = toSignal(
     this.router.events.pipe(

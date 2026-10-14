@@ -15,7 +15,7 @@ O Storefront foi convertido a partir do protótipo e cobre o fluxo completo do c
 
 **Home → Cardápio → Produto/Personalização → Bebidas → Carrinho → Tipo de pedido → Revisão → Confirmação → Acompanhamento → Comanda da cozinha**
 
-> O **nome da loja** já vem da API (`GET /api/v1/store/profile`); o cardápio e os pedidos ainda são **mockados** — veja [Integração com a API](#integração-com-a-api).
+> O **nome da loja** e o **cardápio** vêm da API (`GET /api/v1/store/profile` e `GET /api/v1/store/menu`). Adicionais, ingredientes removíveis, bebida do combo e o pedido ainda são **locais** — veja [Integração com a API](#integração-com-a-api).
 
 Os dois servidores de desenvolvimento encaminham `/api` para a API em `http://localhost:5143` (`proxy.conf.json`). Suba a API antes (veja o [README da API](https://github.com/Ryan-pedro/brasa-burger-API/blob/main/README.md)); sem ela, as duas aplicações mostram uma tela de erro com o botão "Tentar de novo".
 
@@ -106,7 +106,7 @@ projects/storefront/src/
    ├─ app.routes.ts                # rotas (lazy) + guards
    ├─ core/
    │  ├─ models/                   # menu.model.ts, order.model.ts
-   │  ├─ data/menu.data.ts         # cardápio mockado, adicionais, bebidas do combo, dados do restaurante
+   │  ├─ data/menu.data.ts         # dados ainda locais: adicionais, ingredientes, bebidas do combo, cores por categoria, dados do restaurante
    │  ├─ utils/pricing.ts          # regras de preço puras (+ pricing.spec.ts)
    │  ├─ guards.ts                 # checkout só com itens; confirmação só com pedido
    │  └─ services/
@@ -147,7 +147,7 @@ projects/storefront/src/
 | Rota | Tela |
 |---|---|
 | `/` | Home |
-| `/cardapio?categoria=burgers` | Cardápio (burgers, combos, dogs, porcoes, sobremesas) |
+| `/cardapio?categoria=hamburgueres` | Cardápio (o valor de `categoria` é o slug da categoria na API) |
 | `/bebidas` | Bebidas |
 | `/promocoes` | Promoções |
 | `/carrinho` | Carrinho |
@@ -172,7 +172,8 @@ Pontos já preparados para trocar o mock por chamadas HTTP (`provideHttpClient()
 
 | Onde | Hoje | Com backend (.NET) |
 |---|---|---|
-| `MenuService` | lê `menu.data.ts` | `GET /api/produtos`, `GET /api/categorias` |
+| `MenuService` | **integrado**: `GET /api/v1/store/menu`, convertido por `menu.mapper.ts` (centavos → reais, categoria pelo `slug`) | — |
+| Adicionais, ingredientes, bebida do combo | `menu.data.ts` (ingredientes casados pelo nome do produto) | grupos de opções na API |
 | `OrderService.confirm()` | gera o número localmente | `POST /api/pedidos` → retorna número e status |
 | `OrderService.advanceStatus()` | botão de simulação | status em tempo real (ex.: SignalR) |
 | Comanda da cozinha | `window.print()` no navegador | backend envia para a impressora térmica (ESC/POS) ao criar o pedido |
@@ -183,5 +184,5 @@ Os modelos em `core/models` podem servir de base para os DTOs.
 ## Personalização visual
 
 Cores, fontes e raios estão em `:root` no `projects/storefront/src/styles.scss`. Para trocar as ilustrações por fotos,
-substitua os arquivos em `projects/storefront/public/img/produtos/` (ou altere o campo `image` em `menu.data.ts`);
+substitua os arquivos em `projects/storefront/public/img/produtos/` (ou altere a imagem do produto no cadastro);
 fotos com fundo transparente (PNG/WebP) ficam melhores sobre os fundos coloridos dos cards.

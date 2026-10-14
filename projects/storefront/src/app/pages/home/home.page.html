@@ -52,7 +52,7 @@
 <section class="categories">
   <div class="tiles-scroll no-scrollbar">
     <div class="tiles">
-      @for (c of categories; track c.id) {
+      @for (c of categories(); track c.id) {
         <button type="button" class="tile" [class.highlight]="c.id === highlightCategory" (click)="goToCategory(c.id)">
           @if (c.id === highlightCategory) { <span class="tile-top">Top</span> }
           <img [src]="c.image" alt="">
@@ -97,7 +97,7 @@
         <a routerLink="/cardapio" class="link-btn">VER TUDO</a>
       </div>
       <ul class="best-list">
-        @for (p of bestSellers; track p.id) {
+        @for (p of bestSellers(); track p.id) {
           <li>
             <button type="button" class="best-thumb" [style.background]="menu.tint(p)" (click)="sheet.open(p)" [attr.aria-label]="'Ver ' + p.name">
               <img [src]="p.image" alt="">
@@ -126,7 +126,7 @@
   <div class="container">
     <h2 class="offers-title">Ofertas quentes</h2>
     <div class="offers-grid">
-      <a routerLink="/cardapio" [queryParams]="{ categoria: 'burgers' }" class="offer red">
+      <a routerLink="/cardapio" [queryParams]="{ categoria: highlightCategory }" class="offer red">
         <span class="offer-kicker">Terça do Hambúrguer</span>
         <span class="offer-title">2º burger com 50% OFF</span>
         <span class="offer-text">Toda terça-feira, no de menor valor.</span>

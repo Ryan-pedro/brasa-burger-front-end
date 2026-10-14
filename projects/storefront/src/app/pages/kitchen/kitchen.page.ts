@@ -1,31 +1,39 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { Order } from '../../core/models/order.model';
+import { MENU_SLUGS } from '../../core/data/menu.data';
+import { Product } from '../../core/models/menu.model';
+import { CartLine, Order } from '../../core/models/order.model';
+import { MenuService } from '../../core/services/menu.service';
+import { computeTotals } from '../../core/utils/pricing';
 import { OrderService } from '../../core/services/order.service';
 import { IconComponent } from '../../shared/icon.component';
 import { KitchenTicketComponent } from '../../shared/kitchen-ticket/kitchen-ticket.component';
 
-/** Pedido de exemplo exibido quando a tela é aberta sem um pedido feito. */
-const SAMPLE_ORDER: Order = {
-  number: 1048,
-  createdAt: new Date(2026, 8, 23, 13, 48),
-  type: 'balcao',
-  payment: 'card',
-  status: 1,
-  customer: { mesa: '', nome: 'Ryan', deliveryNome: '', telefone: '', rua: '', numero: '', complemento: '', bairro: '' },
-  lines: [
-    { key: 'a', productId: 'b1', qty: 2, extras: ['bacon', 'queijo'], removed: [], choice: null, note: 'Cortar ao meio' },
-    { key: 'b', productId: 'p1', qty: 1, extras: [], removed: [], choice: null, note: '' },
-    { key: 'c', productId: 'd1', qty: 2, extras: [], removed: [], choice: null, note: '' },
-  ],
-  totals: { count: 5, subtotal: 97.7, discount: 5, discountLabel: 'R$ 5 OFF no app', fee: 0, total: 92.7 },
-};
+function sampleOrder(menu: MenuService): Order {
+  const picks = [menu.byCategory(MENU_SLUGS.burgers)[0], menu.byCategory(MENU_SLUGS.sides)[0], menu.drinks()[0]]
+    .filter((p): p is Product => !!p);
+  const lines: CartLine[] = picks.map((p, i) => ({
+    key: String(i),
+    productId: p.id,
+    qty: i === 1 ? 1 : 2,
+    extras: p.customization === 'burger' ? ['bacon', 'queijo'] : [],
+    removed: [],
+    choice: null,
+    note: i === 0 ? 'Cortar ao meio' : '',
+  }));
 
-/**
- * Visão da cozinha: simula a comanda saindo da impressora térmica.
- * "Imprimir" usa window.print() com CSS de impressão (80 mm).
- * Integração real: o backend envia a comanda para a impressora (ESC/POS) ao confirmar o pedido.
- */
+  return {
+    number: 1048,
+    createdAt: new Date(2026, 8, 23, 13, 48),
+    type: 'balcao',
+    payment: 'card',
+    status: 1,
+    customer: { mesa: '', nome: 'Ryan', deliveryNome: '', telefone: '', rua: '', numero: '', complemento: '', bairro: '' },
+    lines,
+    totals: computeTotals(lines, id => menu.getById(id), 'balcao'),
+  };
+}
+
 @Component({
   selector: 'app-kitchen-page',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -92,7 +100,8 @@ const SAMPLE_ORDER: Order = {
 })
 export class KitchenPage {
   readonly orders = inject(OrderService);
-  readonly order = computed(() => this.orders.current() ?? SAMPLE_ORDER);
+  private readonly menu = inject(MenuService);
+  readonly order = computed(() => this.orders.current() ?? sampleOrder(this.menu));
   readonly printing = signal(true);
 
   reprint(): void {

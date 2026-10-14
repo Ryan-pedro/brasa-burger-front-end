@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { RESTAURANT } from '../../core/data/menu.data';
+import { MENU_SLUGS, RESTAURANT } from '../../core/data/menu.data';
 import { CategoryId } from '../../core/models/menu.model';
 import { MenuService } from '../../core/services/menu.service';
 import { ProductSheetService } from '../../core/services/product-sheet.service';
@@ -24,8 +24,9 @@ export class HomePage {
 
   readonly restaurant = RESTAURANT;
   readonly categories = this.menu.categories;
-  readonly bestSellers = this.menu.bestSellers();
-  readonly highlightCategory: CategoryId = 'burgers';
+  readonly bestSellers = this.menu.bestSellers;
+  readonly weeklyCombo = this.menu.weeklyCombo;
+  readonly highlightCategory: CategoryId = MENU_SLUGS.burgers;
 
   readonly features: { icon: IconName; label: string }[] = [
     { icon: 'medal', label: 'Carne do dia' },
@@ -39,6 +40,7 @@ export class HomePage {
   }
 
   openWeeklyCombo(): void {
-    this.sheet.open(this.menu.getById('c1'));
+    const combo = this.weeklyCombo();
+    if (combo) this.sheet.open(combo);
   }
 }

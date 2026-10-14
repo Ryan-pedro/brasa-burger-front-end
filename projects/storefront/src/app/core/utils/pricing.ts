@@ -1,7 +1,7 @@
 /**
  * Regras de preço puras (sem estado) — fáceis de testar e de mover para o backend.
  */
-import { COMBO_DRINKS, EXTRAS, RESTAURANT } from '../data/menu.data';
+import { COMBO_DRINKS, EXTRAS, MENU_SLUGS, RESTAURANT } from '../data/menu.data';
 import { Product } from '../models/menu.model';
 import { CartLine, CartLineInput, CartTotals, OrderType } from '../models/order.model';
 
@@ -87,7 +87,7 @@ export function computeTotals(
     const burgerPrices: number[] = [];
     for (const l of lines) {
       const p = getProduct(l.productId);
-      if (p.category === 'burgers') for (let i = 0; i < l.qty; i++) burgerPrices.push(p.price);
+      if (p.category === MENU_SLUGS.burgers) for (let i = 0; i < l.qty; i++) burgerPrices.push(p.price);
     }
     if (burgerPrices.length >= 2) {
       const tuesday = Math.min(...burgerPrices) * 0.5;

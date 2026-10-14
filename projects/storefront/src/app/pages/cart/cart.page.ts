@@ -37,7 +37,7 @@ import { OrderSummaryComponent } from '../../shared/order-summary.component';
         <section class="upsell">
           <h2>Que tal acompanhar?</h2>
           <div class="upsell-row no-scrollbar">
-            @for (p of upsell; track p.id) {
+            @for (p of upsell(); track p.id) {
               <div class="up card">
                 <span class="up-img" [style.background]="menu.tint(p)"><img [src]="p.image" alt=""></span>
                 <span class="up-name">{{ p.name }} {{ p.size }}</span>
@@ -88,5 +88,5 @@ export class CartPage {
   readonly checkout = inject(CheckoutService);
   readonly menu = inject(MenuService);
   readonly sheet = inject(ProductSheetService);
-  readonly upsell = this.menu.upsell();
+  readonly upsell = this.menu.upsell;
 }

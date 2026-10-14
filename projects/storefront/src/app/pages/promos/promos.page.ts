@@ -72,6 +72,7 @@ export class PromosPage {
   private readonly sheet = inject(ProductSheetService);
 
   openCombo(): void {
-    this.sheet.open(this.menu.getById('c1'));
+    const combo = this.menu.weeklyCombo();
+    if (combo) this.sheet.open(combo);
   }
 }

@@ -1,16 +1,10 @@
-/** Categorias do cardápio (exceto bebidas, que têm subcategorias próprias). */
-export type CategoryId = 'burgers' | 'combos' | 'dogs' | 'porcoes' | 'sobremesas';
+export type CategoryId = string;
 
-/** Subcategorias da aba de bebidas. */
-export type DrinkCategoryId = 'refri' | 'suco' | 'agua' | 'shake' | 'outras';
-
-/** Define qual tela de personalização o produto usa. */
 export type CustomizationType = 'burger' | 'dog' | 'combo';
 
 export interface Ingredient {
   id: string;
   label: string;
-  /** Ingredientes fixos (pão, carne) não podem ser removidos. */
   fixed?: boolean;
 }
 
@@ -28,14 +22,11 @@ export interface ChoiceOption {
 
 export interface Product {
   id: string;
-  category: CategoryId | 'drink';
-  drinkCategory?: DrinkCategoryId;
+  category: CategoryId;
   name: string;
   description: string;
   price: number;
-  /** Preço "de" exibido riscado em promoções. */
   oldPrice?: number;
-  /** Tamanho exibido em bebidas (ex.: 350ml). */
   size?: string;
   image: string;
   popular?: boolean;
@@ -48,9 +39,4 @@ export interface Category {
   id: CategoryId;
   label: string;
   image: string;
-}
-
-export interface DrinkCategory {
-  id: DrinkCategoryId | 'all';
-  label: string;
 }

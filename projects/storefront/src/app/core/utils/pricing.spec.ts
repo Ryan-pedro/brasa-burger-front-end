@@ -1,7 +1,18 @@
-import { PRODUCTS } from '../data/menu.data';
+import { Product } from '../models/menu.model';
 import { CartLine } from '../models/order.model';
 import { computeTotals, formatBRL, lineKey, unitPrice } from './pricing';
 
+const product = (id: string, category: string, price: number, customization?: Product['customization']): Product => ({
+  id, category, name: id, description: '', price, image: '', customization,
+});
+const PRODUCTS = [
+  product('b1', 'hamburgueres', 24.9, 'burger'),
+  product('b3', 'hamburgueres', 29.9, 'burger'),
+  product('b4', 'hamburgueres', 31.9, 'burger'),
+  product('c1', 'combos', 32.9, 'combo'),
+  product('p1', 'porcoes', 19.9),
+  product('d1', 'bebidas', 6),
+];
 const byId = (id: string) => PRODUCTS.find(p => p.id === id)!;
 const line = (p: Partial<CartLine> & { productId: string }): CartLine => ({
   key: '', qty: 1, extras: [], removed: [], choice: null, note: '', ...p,

@@ -1,16 +1,15 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { StoreContext } from './store-context.service';
+import { StorefrontLoader } from './storefront-loader.service';
 
-/** Tela exibida quando os dados da loja não puderam ser carregados. */
 @Component({
   selector: 'app-store-unavailable',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    @if (store.status() === 'error') {
+    @if (loader.status() === 'error') {
       <main class="wrap">
         <h1>Não foi possível carregar a loja</h1>
         <p>Verifique sua conexão e tente de novo.</p>
-        <button type="button" class="btn btn-primary" (click)="store.load()">Tentar de novo</button>
+        <button type="button" class="btn btn-primary" (click)="loader.load()">Tentar de novo</button>
       </main>
     }
   `,
@@ -22,5 +21,5 @@ import { StoreContext } from './store-context.service';
   `,
 })
 export class StoreUnavailableComponent {
-  readonly store = inject(StoreContext);
+  readonly loader = inject(StorefrontLoader);
 }

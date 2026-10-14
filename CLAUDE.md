@@ -203,6 +203,73 @@ Uma implementação visual só pode ser considerada pronta quando:
 - Não existem regressões funcionais conhecidas.
 - Testes e build passaram, ou eventuais impedimentos foram relatados.
 - A revisão visual foi realizada quando tecnicamente possível.
+
+## Integração com a skill ui-ui-pro-max-skill
+
+### Hierarquia de instruções
+
+O `CLAUDE.md` é a fonte de verdade deste repositório. A skill `ui-ui-pro-max-skill` é uma ferramenta especializada de apoio ao design, subordinada às regras deste arquivo.
+
+Em caso de conflito, respeite esta ordem:
+
+1. Segurança, integridade dos dados e contratos da API.
+2. Arquitetura, stack, restrições de dependências e padrões estabelecidos neste `CLAUDE.md`.
+3. Identidade visual específica do Brasa Burger definida neste arquivo e nos tokens existentes.
+4. Requisitos explícitos da tarefa solicitada pelo usuário.
+5. Recomendações, padrões, templates e preferências da skill de UI/UX.
+
+Não permita que recomendações da skill substituam regras obrigatórias do projeto.
+
+### Como utilizar a skill
+
+Antes de implementar alterações visuais:
+
+1. Verifique se `ui-ui-pro-max-skill` está disponível e leia suas instruções.
+2. Utilize seus recursos de pesquisa, design system, tipografia, paletas, layouts e componentes quando forem relevantes.
+3. Considere suas recomendações como propostas que precisam ser avaliadas para este produto, não como decisões automaticamente aprovadas.
+4. Compare as recomendações com a identidade visual do storefront ou do admin.
+5. Adapte as sugestões aos tokens CSS, à arquitetura Angular e aos componentes existentes.
+6. Implemente somente as recomendações compatíveis com as regras deste repositório.
+
+Não invente funcionalidades, componentes, bibliotecas ou recursos que a skill apenas mencione como possibilidades.
+
+### Restrições obrigatórias
+
+A skill não está autorizada a:
+
+- Alterar a stack ou a arquitetura do projeto.
+- Instalar pacotes npm, plugins ou ferramentas sem autorização explícita.
+- Introduzir bibliotecas de UI ou de estado global.
+- Substituir os tokens, fontes ou cores definidos para o Brasa Burger por um design system genérico.
+- Introduzir componentes duplicados quando já houver uma solução adequada no projeto.
+- Modificar contratos da API, regras de negócio, autenticação, permissões ou segurança para atender a uma proposta visual.
+- Aplicar automaticamente templates, paletas, animações ou layouts recomendados sem verificar sua adequação ao produto.
+
+### Resolução de conflitos de design
+
+Quando uma recomendação da skill conflitar com a identidade visual ou com os padrões existentes:
+
+1. Preserve as regras obrigatórias do projeto.
+2. Reaproveite a intenção positiva da recomendação, se houver.
+3. Adapte a solução para a identidade do Brasa Burger.
+4. Se o conflito envolver uma decisão importante de produto ou uma mudança estrutural, explique as alternativas e solicite aprovação antes de prosseguir.
+
+Não descarte automaticamente uma recomendação apenas por ser diferente dos padrões existentes; avalie se ela representa uma melhoria real e compatível.
+
+### Validação da implementação
+
+Após implementar:
+
+- Verifique a interface renderizada no navegador quando as ferramentas disponíveis permitirem.
+- Valide desktop, celular, acessibilidade, estados de interface e microinterações.
+- Compare o resultado com a direção visual definida e com as recomendações aproveitadas da skill.
+- Corrija inconsistências e evite padrões genéricos.
+- Execute os testes e o build exigidos pelo projeto.
+- Informe limitações de inspeção visual ou validação quando existirem.
+
+A skill contribui com conhecimento especializado; o agente continua responsável pela qualidade técnica e visual do resultado.
+
+
 Regra final: nunca entregue a primeira versão visual apenas porque ela parece aceitável no código. Avalie o resultado como um designer de produto exigente e como um engenheiro frontend responsável pela qualidade de produção. Identifique o que parece genérico, desnecessário, inconsistente ou mal acabado e corrija antes de concluir.
 Texto da interface
 - Português do Brasil, frase normal (não Title Case), voz ativa.

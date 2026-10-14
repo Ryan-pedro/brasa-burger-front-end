@@ -5,7 +5,7 @@ import localePt from '@angular/common/locales/pt';
 import { TitleStrategy, provideRouter, withComponentInputBinding, withInMemoryScrolling } from '@angular/router';
 
 import { routes } from './app.routes';
-import { StoreContext } from './core/store/store-context.service';
+import { StorefrontLoader } from './core/store/storefront-loader.service';
 import { StoreTitleStrategy } from './core/store/store-title.strategy';
 
 registerLocaleData(localePt);
@@ -14,8 +14,7 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideHttpClient(withFetch()),
-    // A loja é carregada antes da primeira tela: nada é exibido sem saber em que loja o cliente está.
-    provideAppInitializer(() => inject(StoreContext).load()),
+    provideAppInitializer(() => inject(StorefrontLoader).load()),
     provideRouter(
       routes,
       withComponentInputBinding(),

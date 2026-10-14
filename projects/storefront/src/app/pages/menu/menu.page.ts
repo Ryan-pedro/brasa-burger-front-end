@@ -21,7 +21,7 @@ import { ProductCardComponent } from '../../shared/product-card/product-card.com
       </div>
 
       <nav class="chips no-scrollbar" aria-label="Categorias">
-        @for (c of menu.categories; track c.id) {
+        @for (c of menu.categories(); track c.id) {
           <button type="button" class="chip cat-chip" [class.is-active]="c.id === selected()" (click)="select(c.id)"
                   [attr.aria-pressed]="c.id === selected()">
             <span class="chip-img"><img [src]="c.image" alt=""></span>{{ c.label }}
@@ -85,12 +85,13 @@ export class MenuPage {
   readonly categoria = input<CategoryId | undefined>();
   readonly selected = linkedSignal<CategoryId>(() => {
     const c = this.categoria();
-    return c && this.menu.categories.some(x => x.id === c) ? c : 'burgers';
+    const categories = this.menu.categories();
+    return c && categories.some(x => x.id === c) ? c : (categories[0]?.id ?? '');
   });
   readonly search = signal('');
 
   readonly products = computed(() => this.menu.byCategory(this.selected(), this.search()));
-  readonly categoryLabel = computed(() => this.menu.categories.find(c => c.id === this.selected())?.label ?? '');
+  readonly categoryLabel = computed(() => this.menu.categories().find(c => c.id === this.selected())?.label ?? '');
 
   select(id: CategoryId): void {
     this.selected.set(id);
