@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
 export type IconName =
   | 'home' | 'burger' | 'cup' | 'tag' | 'bag' | 'plus' | 'minus' | 'close' | 'check' | 'back'
-  | 'arrow-right' | 'trash' | 'edit' | 'clock' | 'pin' | 'flame' | 'at' | 'chat' | 'printer'
+  | 'arrow-right' | 'trash' | 'edit' | 'clock' | 'pin' | 'flame' | 'at' | 'chat'
   | 'utensils' | 'scooter' | 'search' | 'medal' | 'leaf';
 
 /** Ícones de traço (stroke) desenhados em SVG inline, herdam a cor do texto. */
@@ -32,7 +32,6 @@ export type IconName =
         @case ('flame') { <path d="M12 3c1 4 5 5.5 5 10a5 5 0 0 1-10 0c0-2.5 1.5-4 2.5-5 .3 2 1.5 3 2.5 3-1-3 0-6 0-8z"/> }
         @case ('at') { <circle cx="12" cy="12" r="4"/><path d="M16 12v1.5a2.5 2.5 0 0 0 5 0V12a9 9 0 1 0-3.5 7.1"/> }
         @case ('chat') { <path d="M4 5h16v11H8l-4 4z"/> }
-        @case ('printer') { <path d="M7 9V3h10v6M7 17H4v-7h16v7h-3M7 14h10v7H7z"/> }
         @case ('utensils') { <path d="M7 3v8M5 3v4a2 2 0 0 0 4 0V3M7 11v10M17 3c-2 0-3 2-3 5s1 4 3 4v9"/> }
         @case ('scooter') { <circle cx="6" cy="17" r="3"/><circle cx="18" cy="17" r="3"/><path d="M9 17h6l3-7h-4M14 6h3l1 4M4 13h6l2 4"/> }
         @case ('search') { <circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/> }

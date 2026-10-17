@@ -35,10 +35,7 @@ import { FlowHeaderComponent } from '../../shared/layout/flow-header.component';
           <div class="eta"><app-icon name="clock" /><span>Tempo estimado: <strong>{{ eta() }}</strong></span></div>
         </section>
 
-        <div class="two">
-          <a routerLink="/pedido/acompanhar" class="btn btn-primary">Acompanhar pedido</a>
-          <a routerLink="/cozinha/comanda" class="btn btn-dark"><app-icon name="printer" [size]="20" />Ver comanda</a>
-        </div>
+        <a routerLink="/pedido/acompanhar" class="btn btn-primary btn-block">Acompanhar pedido</a>
         <a routerLink="/" class="btn btn-outline btn-block">Voltar para o início</a>
       </div>
     }
@@ -61,8 +58,6 @@ import { FlowHeaderComponent } from '../../shared/layout/flow-header.component';
     .dot.done { background: var(--success); border-color: var(--success); color: var(--white); }
     .eta { display: flex; align-items: center; gap: 10px; background: var(--selected-bg); color: var(--ink); border-radius: 16px; padding: 14px 16px; margin-top: 4px; }
     .eta app-icon { color: var(--red); }
-    .two { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
-    .two .btn { padding: 0 12px; font-size: 15px; }
   `,
 })
 export class OrderConfirmedPage {

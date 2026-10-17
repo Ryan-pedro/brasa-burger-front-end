@@ -13,7 +13,9 @@ O painel da cozinha e as bibliotecas compartilhadas entram em `projects/` depois
 
 O Storefront foi convertido a partir do protótipo e cobre o fluxo completo do cliente:
 
-**Home → Cardápio → Produto/Personalização → Bebidas → Carrinho → Tipo de pedido → Revisão → Confirmação → Acompanhamento → Comanda da cozinha**
+**Home → Cardápio → Produto/Personalização → Bebidas → Carrinho → Tipo de pedido → Revisão → Confirmação → Acompanhamento**
+
+A comanda é da cozinha: o cliente não a vê. Ela sai na impressora térmica pela API (fila de impressão) e fica no painel da cozinha.
 
 > O **nome da loja** e o **cardápio** vêm da API (`GET /api/v1/store/profile` e `GET /api/v1/store/menu`). Adicionais, ingredientes removíveis, bebida do combo e o pedido ainda são **locais** — veja [Integração com a API](#integração-com-a-api).
 
@@ -100,7 +102,7 @@ Permissões, nunca papéis: o painel só pergunta "tem a permissão X?".
 ```
 projects/storefront/src/
 ├─ styles.scss                     # tokens (cores, fontes, raios), botões, chips, campos, animações
-├─ index.html                      # fontes Google (Lilita One, Nunito, JetBrains Mono)
+├─ index.html                      # fontes Google (Lilita One, Nunito)
 └─ app/
    ├─ app.ts                       # shell: header, router-outlet, barra do carrinho, nav inferior, toast, modal
    ├─ app.routes.ts                # rotas (lazy) + guards
@@ -120,7 +122,6 @@ projects/storefront/src/
    │  ├─ layout/                   # site-header, bottom-nav, cart-bar, toast, flow-header
    │  ├─ product-card/             # card de produto (variantes grid e row)
    │  ├─ product-sheet/            # modal de detalhes + personalização
-   │  ├─ kitchen-ticket/           # comanda térmica (com CSS de impressão 80 mm)
    │  ├─ cart-line.component.ts    # item do carrinho (editável ou só leitura)
    │  ├─ order-summary.component.ts
    │  ├─ qty-stepper.component.ts
@@ -136,8 +137,7 @@ projects/storefront/src/
       ├─ checkout-type/            # local (mesa) / balcão (nome) / delivery (endereço)
       ├─ checkout-review/          # confira seu pedido + forma de pagamento
       ├─ order-confirmed/
-      ├─ order-tracking/           # status em 5 etapas (simulado)
-      └─ kitchen/                  # comanda saindo da impressora + window.print()
+      └─ order-tracking/           # status em 5 etapas (simulado)
 ```
 
 `projects/storefront/public/img/produtos/` guarda as ilustrações SVG dos produtos.
@@ -155,7 +155,6 @@ projects/storefront/src/
 | `/pedido/revisao` | Revisão |
 | `/pedido/confirmado` | Pedido confirmado |
 | `/pedido/acompanhar` | Acompanhamento |
-| `/cozinha/comanda` | Comanda da cozinha (mostra um pedido de exemplo se não houver pedido) |
 
 ## Regras de negócio implementadas (`core/utils/pricing.ts`)
 
@@ -176,7 +175,6 @@ Pontos já preparados para trocar o mock por chamadas HTTP (`provideHttpClient()
 | Adicionais, ingredientes, bebida do combo | `menu.data.ts` (ingredientes casados pelo nome do produto) | grupos de opções na API |
 | `OrderService.confirm()` | gera o número localmente | `POST /api/pedidos` → retorna número e status |
 | `OrderService.advanceStatus()` | botão de simulação | status em tempo real (ex.: SignalR) |
-| Comanda da cozinha | `window.print()` no navegador | backend envia para a impressora térmica (ESC/POS) ao criar o pedido |
 | `computeTotals()` | calculado no front | recalcular no backend (fonte da verdade) e exibir o retorno |
 
 Os modelos em `core/models` podem servir de base para os DTOs.

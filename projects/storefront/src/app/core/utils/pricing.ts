@@ -11,8 +11,6 @@ export interface LineDetail {
   kind: LineDetailKind;
   /** Texto para a interface do cliente. */
   text: string;
-  /** Texto em caixa alta para a comanda da cozinha. */
-  ticket: string;
 }
 
 export function extrasFor(product: Product) {
@@ -47,16 +45,16 @@ export function lineDetails(product: Product, line: CartLine): LineDetail[] {
   const out: LineDetail[] = [];
   if (line.choice) {
     const c = COMBO_DRINKS.find(x => x.id === line.choice);
-    if (c) out.push({ kind: 'choice', text: `Bebida: ${c.label}`, ticket: `BEBIDA: ${c.label.toUpperCase()}` });
+    if (c) out.push({ kind: 'choice', text: `Bebida: ${c.label}` });
   }
   for (const e of extrasFor(product)) {
     if (line.extras.includes(e.id)) {
-      out.push({ kind: 'extra', text: `+ ${e.label} (${formatBRL(e.price)})`, ticket: `+ ${e.label.toUpperCase()}` });
+      out.push({ kind: 'extra', text: `+ ${e.label} (${formatBRL(e.price)})` });
     }
   }
   for (const g of product.ingredients ?? []) {
     if (line.removed.includes(g.id)) {
-      out.push({ kind: 'removed', text: `Sem ${g.label.toLowerCase()}`, ticket: `SEM ${g.label.toUpperCase()}` });
+      out.push({ kind: 'removed', text: `Sem ${g.label.toLowerCase()}` });
     }
   }
   return out;

@@ -18,9 +18,5 @@ export const routes: Routes = [
   { path: 'pedido/acompanhar', title: 'Acompanhar pedido', canActivate: [hasOrderGuard],
     loadComponent: () => import('./pages/order-tracking/order-tracking.page').then(m => m.OrderTrackingPage) },
 
-  // Visão da cozinha
-  { path: 'cozinha/comanda', title: 'Comanda da cozinha',
-    loadComponent: () => import('./pages/kitchen/kitchen.page').then(m => m.KitchenPage) },
-
   { path: '**', redirectTo: '' },
 ];
